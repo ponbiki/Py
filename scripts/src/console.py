@@ -1,4 +1,5 @@
 #!/usr/local/bin/python3
+import psutil
 import subprocess
 sw = {
     'cs51':          '0',
@@ -43,11 +44,20 @@ else:
     arg = '/dev/cuaU' + sw[selected]
     proc = subprocess.Popen(['cu', '-l', arg], shell=False)
     errval = proc.communicate()[0]
-    if (proc.returncode) == 3:
+    if (proc.returncode) != 0:
         print("This console may be in use by someone else.\nWould you like to preempt the connection (y/n)")
         preempt = input()
+        while preempt != "y" and preempt != "n":
+            print("Please choose (y/n)")
+            preempt = input()
         if preempt == "y":
-            print("what a dick")
-        elif preempt == "n":
+            proc_cmd = ['cu', '-l', arg]
+            for prc in psutil.pids():
+                p = psutil.Process(prc)
+                if p.cmdline() == proc_cmd:
+                    p.terminate()
+                    break
+            subprocess.call(['cu', '-l', arg], shell=False)
+        else:
             print("Exiting")
             exit()
