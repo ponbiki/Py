@@ -33,7 +33,7 @@ sw = {
 sw_list = sorted(list(sw.keys()))
 separator = "\n"
 list_str = separator.join(sw_list)
-welcome = "\nPlease select a switch:\n\nTo disconnect, type ~ followed by CTRL+d\n" + list_str + "\n"
+welcome = "\nPlease select a switch:\nTo disconnect, type ~ followed by CTRL+d\n\n" + list_str + "\n"
 print(welcome)
 selected = input()
 while selected not in sw:
