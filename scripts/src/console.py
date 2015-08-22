@@ -40,4 +40,6 @@ while selected not in sw:
     print("Try a switch name in the list!\n")
     selected = input()
 else:
-    proc = subprocess.call('cu -l /dev/cuaU' + sw[selected], shell=True)
+    #proc = subprocess.call('cu -l /dev/cuaU' + sw[selected], shell=True)
+    arg = '/dev/cuaU' + sw[selected]
+    proc = subprocess.Popen(["cu", "-l", arg], shell=False)
