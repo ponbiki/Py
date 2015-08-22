@@ -33,10 +33,11 @@ sw = {
 sw_list = sorted(list(sw.keys()))
 separator = "\n"
 list_str = separator.join(sw_list)
-welcome = "Please select a switch:\nTo disconnect, type ~ followed by CTRL+d\n\n" + list_str + "\n"
+welcome = "\nPlease select a switch:\n\nTo disconnect, type ~ followed by CTRL+d\n" + list_str + "\n"
 print(welcome)
 selected = input()
-if selected in sw:
-    proc = subprocess.call('cu -l /dev/cuaU' + sw[selected], shell=True)
+while selected not in sw:
+    print("Try a switch name in the list!\n")
+    selected = input()
 else:
-    print("Try a switch name in the list!")
+    proc = subprocess.call('cu -l /dev/cuaU' + sw[selected], shell=True)
