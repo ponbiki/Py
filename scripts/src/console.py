@@ -40,6 +40,14 @@ while selected not in sw:
     print("Try a switch name in the list!\n")
     selected = input()
 else:
-    #proc = subprocess.call('cu -l /dev/cuaU' + sw[selected], shell=True)
     arg = '/dev/cuaU' + sw[selected]
-    proc = subprocess.Popen(["cu", "-l", arg], shell=False)
+    proc = subprocess.Popen(['cu', '-l', arg], shell=False)
+    errval = proc.communicate()[0]
+    if (proc.returncode) == 3:
+        print("This console may be in use by someone else.\nWould you like to preempt the connection (y/n)")
+        preempt = input()
+        if preempt == "y":
+            print("what a dick")
+        elif preempt == "n":
+            print("Exiting")
+            exit()
