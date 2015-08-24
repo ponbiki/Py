@@ -31,9 +31,8 @@ sw = {
     'cs59':          '26',
     'temp':          '28'
     }
-sw_list = sorted(list(sw.keys()))
 separator = "\n"
-list_str = separator.join(sw_list)
+list_str = separator.join(sorted(list(sw.keys())))
 welcome = "\nPlease select a switch:\nTo disconnect, type ~ followed by CTRL+d\n\n" + list_str + "\n"
 print(welcome)
 selected = input()
