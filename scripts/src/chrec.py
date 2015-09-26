@@ -37,6 +37,9 @@ if json.loads(body) == {'message': 'Unauthorized'}:
 print('Please enter the record name that you want to change')
 
 record = raw_input() #sanitize blah blah some kind of validation
+record_list = record.split('.')
+subd = len(record_list)
+zone = record_list[subd - 2] + '.' + record_list[subd - 1]
 
 print('Please enter record type ( A or CNAME )')
 
@@ -62,7 +65,7 @@ if do_you != "y":
     print('Exiting now!')
     exit()
     
-old_rec_url = base_url + "zones/" + record + "/" + record + "/" + old_type
+old_rec_url = base_url + "zones/" + zone + "/" + record + "/" + old_type
 old_rec_verb = "GET"
 
 old_json = buster(old_rec_url, old_rec_verb, authhead)
@@ -74,10 +77,12 @@ pprint(old_json_dict)
 new_json_dict = deepcopy(old_json_dict)
 new_json_dict['type'] = new_type
 print ("\n\r\n\r")
+pprint(new_json_dict)
+print ("\n\r\n\r")
 
 for answer in new_json_dict['answers']:
-    print("Please enter the replacement answer for " + answer['answer'])
-    
+    print("Please enter the replacement answer for " + answer['answer'][0])
+    answer['answer'][0] = raw_input() #sanitize and validate
 print ("\n\r\n\r")
 pprint(new_json_dict)
 print ("\n\r\n\r")
