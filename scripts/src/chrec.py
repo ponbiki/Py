@@ -66,11 +66,20 @@ old_rec_url = base_url + "zones/" + record + "/" + record + "/" + old_type
 old_rec_verb = "GET"
 
 old_json = buster(old_rec_url, old_rec_verb, authhead)
-
+print ("\n\r\n\r")
+pprint(old_json)
 old_json_dict = json.loads(old_json)
 print ("\n\r\n\r")
 pprint(old_json_dict)
 new_json_dict = deepcopy(old_json_dict)
 new_json_dict['type'] = new_type
 print ("\n\r\n\r")
+
+for answer in new_json_dict['answers']:
+    print("Please enter the replacement answer for " + answer['answer'])
+    
+print ("\n\r\n\r")
 pprint(new_json_dict)
+print ("\n\r\n\r")
+new_json = json.dumps(new_json_dict)
+pprint(new_json)
