@@ -67,12 +67,10 @@ old_rec_verb = "GET"
 
 old_json = buster(old_rec_url, old_rec_verb, authhead)
 
-pprint(json.loads(old_json)[0])
+old_json_dict = json.loads(old_json)
 print ("\n\r\n\r")
-print(old_json)
-new_json = copy.deepcopy(old_json)
-new_json['type'] = new_type
+pprint(old_json_dict)
+new_json_dict = deepcopy(old_json_dict)
+new_json_dict['type'] = new_type
 print ("\n\r\n\r")
-pprint(new_json)
-print ("\n\r\n\r")
-print(new_json)
+pprint(new_json_dict)
