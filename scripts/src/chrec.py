@@ -41,7 +41,7 @@ record_list = record.split('.')
 subd = len(record_list)
 zone = record_list[subd - 2] + '.' + record_list[subd - 1]
 
-print('Please enter record type ( A or CNAME )')
+print('Please enter record type ( A or CNAME )') #if old type is A will need to check filters to ensure select_first_n
 
 temp_type = raw_input()
 
