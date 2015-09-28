@@ -17,12 +17,14 @@ base_url = 'https://api.nsone.net/v1/'
 validate_url = base_url + "zones"
 validate_verb = "GET"
 
-def buster(url, verb, authhead):
+def buster(url, verb, authhead, *args):
     buffer = StringIO()
     c = pycurl.Curl()
     c.setopt(c.URL, url)
     c.setopt(c.CUSTOMREQUEST, verb)
     c.setopt(c.HTTPHEADER, [authhead])
+    for arg in args:
+        c.setopt(c.POSTFIELDS, arg)
     c.setopt(c.WRITEDATA, buffer)
     c.perform()
     c.close()
@@ -36,14 +38,14 @@ if json.loads(body) == {'message': 'Unauthorized'}:
 
 print('Please enter the record name that you want to change')
 
-record = raw_input() #sanitize blah blah some kind of validation
+record = raw_input().lower() #sanitize blah blah some kind of validation
 record_list = record.split('.')
 subd = len(record_list)
 zone = record_list[subd - 2] + '.' + record_list[subd - 1]
 
-print('Please enter record type ( A or CNAME )') #if old type is A will need to check filters to ensure select_first_n
+print('Please enter record type ( A or CNAME )')
 
-temp_type = raw_input()
+temp_type = raw_input().upper()
 
 if temp_type == "A":
     old_type = "A"
@@ -69,22 +71,44 @@ old_rec_url = base_url + "zones/" + zone + "/" + record + "/" + old_type
 old_rec_verb = "GET"
 
 old_json = buster(old_rec_url, old_rec_verb, authhead)
-print ("\n\r\n\r")
-pprint(old_json)
 old_json_dict = json.loads(old_json)
-print ("\n\r\n\r")
-pprint(old_json_dict)
 new_json_dict = deepcopy(old_json_dict)
 new_json_dict['type'] = new_type
-print ("\n\r\n\r")
-pprint(new_json_dict)
-print ("\n\r\n\r")
 
 for answer in new_json_dict['answers']:
     print("Please enter the replacement answer for " + answer['answer'][0])
-    answer['answer'][0] = raw_input() #sanitize and validate
-print ("\n\r\n\r")
-pprint(new_json_dict)
-print ("\n\r\n\r")
+    answer['answer'][0] = raw_input().lower() #sanitize and validate
+
+if new_type == "CNAME":
+    n_one = {'filter': 'select_first_n', 'config': {}}
+    if not any (filter['filter'] == 'select_first_n' for filter in new_json_dict['filters']):
+        new_json_dict['filters'].append(n_one)
+        print("Added SELECT_FIRST_N filter for CNAME RFC compliance.\n")
+        
 new_json = json.dumps(new_json_dict)
-pprint(new_json)
+
+new_rec_url = base_url + "zones/" + zone + "/" + record + "/" + new_type
+new_rec_verb = "PUT"
+
+new_body = buster(new_rec_url, new_rec_verb, authhead, new_json)
+
+print("New " + new_type + " record " + record + " has now been created\n")
+
+print("Would you like to delete the " + record + " " + old_type + " record now (Y/n)")
+
+well_do_you = raw_input().lower()
+
+if well_do_you != "y":
+    print(record + " " + old_type + " record was not deleted...exiting now!")
+    exit()
+
+del_rec_url = base_url + "zones/" + zone + "/" + record + "/" + old_type
+del_rec_verb = "DELETE"
+
+del_body = buster(del_rec_url, del_rec_verb, authhead)
+
+print("The " + record + " " + old_type + " record has been deleted. \n In case you really did not want to do this, here's a JSON dump of it...\n")
+
+pprint(old_json)
+
+exit()
