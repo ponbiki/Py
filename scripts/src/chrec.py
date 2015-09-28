@@ -6,17 +6,6 @@ from StringIO import StringIO
 from pprint import pprint
 from copy import deepcopy
 
-print('**********************************************')
-print('Simple A record <=> CNAME record swapping tool')
-print('**********************************************')
-print('Enter your API key')
-key = raw_input()
-
-authhead = "X-NSONE-Key:" + key
-base_url = 'https://api.nsone.net/v1/'
-validate_url = base_url + "zones"
-validate_verb = "GET"
-
 def buster(url, verb, authhead, *args):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -29,6 +18,17 @@ def buster(url, verb, authhead, *args):
     c.perform()
     c.close()
     return buffer.getvalue()
+
+print('**********************************************')
+print('Simple A record <=> CNAME record swapping tool')
+print('**********************************************')
+print('Enter your API key')
+key = raw_input()
+
+authhead = "X-NSONE-Key:" + key
+base_url = 'https://api.nsone.net/v1/'
+validate_url = base_url + "zones"
+validate_verb = "GET"
 
 body = buster(validate_url, validate_verb, authhead)
 
