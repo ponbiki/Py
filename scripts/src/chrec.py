@@ -109,6 +109,6 @@ del_body = buster(del_rec_url, del_rec_verb, authhead)
 
 print("The " + record + " " + old_type + " record has been deleted. \n In case you really did not want to do this, here's a JSON dump of it...\n")
 
-pprint(old_json)
+print(old_json)
 
 exit()
