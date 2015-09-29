@@ -19,9 +19,9 @@ def buster(url, verb, authhead, *args):
     c.close()
     return buffer.getvalue()
 
-print('********************************************')
-print('*Simple A <=> CNAME <=> Alias swapping tool*')
-print('********************************************')
+print('**********************************************')
+print('* Simple A <=> CNAME <=> Alias swapping tool *')
+print('**********************************************')
 print('Enter your API key')
 key = raw_input() #sanitize
 
