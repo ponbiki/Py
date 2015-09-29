@@ -96,7 +96,7 @@ for answer in new_json_dict['answers']:
     print("Please enter the replacement answer for " + answer['answer'][0])
     answer['answer'][0] = raw_input().lower() #sanitize and validate
 
-if new_type == "CNAME":
+if new_type == "CNAME" or new_type == "ALIAS":
     n_one = {'filter': 'select_first_n', 'config': {'N': 1}}
     if not any (filter['filter'] == 'select_first_n' for filter in new_json_dict['filters']):
         new_json_dict['filters'].append(n_one)
