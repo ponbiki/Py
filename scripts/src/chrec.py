@@ -3,7 +3,7 @@
 import json
 import pycurl
 from StringIO import StringIO
-from pprint import pprint
+#from pprint import pprint
 from copy import deepcopy
 
 def buster(url, verb, authhead, *args):
@@ -19,11 +19,11 @@ def buster(url, verb, authhead, *args):
     c.close()
     return buffer.getvalue()
 
-print('**********************************************')
-print('Simple A record <=> CNAME record swapping tool')
-print('**********************************************')
+print('******************************************')
+print('Simple A <=> CNAME <=> Alias swapping tool')
+print('******************************************')
 print('Enter your API key')
-key = raw_input()
+key = raw_input() #sanitize
 
 authhead = "X-NSONE-Key:" + key
 base_url = 'https://api.nsone.net/v1/'
@@ -43,18 +43,35 @@ record_list = record.split('.')
 subd = len(record_list)
 zone = record_list[subd - 2] + '.' + record_list[subd - 1]
 
-print('Please enter record type ( A or CNAME )')
+print('Please enter current record type ( A / ALIAS / CNAME )')
 
 temp_type = raw_input().upper()
 
 if temp_type == "A":
     old_type = "A"
-    new_type = "CNAME"
+elif temp_type == "ALIAS":
+    old_type = "ALIAS"
 elif temp_type == "CNAME":
     old_type = "CNAME"
-    new_type = "A"
 else:
-    print('Sorry, that was not a valid record type')
+    print('Sorry, ' + temp_type + ' was not a valid record type')
+    exit()
+
+print('Please enter new record type ( A / ALIAS / CNAME )')
+
+temp_new_type = raw_input().upper()
+
+if temp_new_type == old_type:
+    print('Well ' + record + ' is already set then....nothing to do here...exiting!')
+    exit()
+elif temp_new_type == "A":
+    new_type = "A"
+elif temp_new_type == "ALIAS":
+    new_type = "ALIAS"
+elif temp_new_type == "CNAME":
+    new_type = "CNAME"
+else:
+    print('Sorry, ' + new_temp_type + ' was not a valid record type')
     exit()
 
 print('This will change ' + record + ' from record type ' + old_type + ' to record type ' + new_type)
