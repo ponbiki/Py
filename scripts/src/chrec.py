@@ -75,7 +75,6 @@ else:
     exit()
 
 print('This will change ' + record + ' from record type ' + old_type + ' to record type ' + new_type)
-print('''!!!!!!THIS IS IRREVERSIBLE!!!!!!''')
 print('Do you wish to continue? ( Y/n ) ')
 
 do_you = raw_input().lower()
