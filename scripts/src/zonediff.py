@@ -5,6 +5,7 @@ import pycurl
 import re
 from subprocess import check_output
 from StringIO import StringIO
+from operator import itemgetter
 from pprint import pprint
 
 API_URI = "https://api.nsone.net/v1/"
@@ -50,12 +51,12 @@ def lookup(record, type, ns):
         if len(answer) != 0:
             component = answer.split("\t")
             result = [
-                component[4],
-                component[1],
-                component[0]
+                component[4], #answer
+                component[1], #ttl
+                component[0]  #record
             ]
             results.append(result)
-            sorted(results)
+            sorted(results, key=itemgetter(0))
     return results
 
 def diff_rec(list_o_records):
