@@ -25,7 +25,7 @@ print('**********************************************')
 print('Enter your API key')
 key = raw_input() #sanitize
 
-authhead = "X-NSONE-Key:" + key
+authhead = "X-NSONE-Key: " + key
 base_url = 'https://api.nsone.net/v1/'
 validate_url = base_url + "zones"
 validate_verb = "GET"
