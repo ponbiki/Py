@@ -3,7 +3,6 @@
 import json
 import pycurl
 from StringIO import StringIO
-#from pprint import pprint
 from copy import deepcopy
 
 def buster(url, verb, authhead, *args):
