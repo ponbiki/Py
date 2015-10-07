@@ -36,7 +36,7 @@ def record_list(zone_json):
     for records in zone['records']:
         if records['type'] != 'NS':
             if records['type'] == 'ALIAS':
-                records['type'] == 'CNAME'
+                records['type'] == 'A'
             recs = {
                 'domain': records['domain'],
                 'type': records['type']
@@ -99,10 +99,10 @@ print('*!!!!!!!!!!!!!Zone_Consistancy_Checker_v1!!!!!!!!!!!!!!!!!!*')
 print('*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*')
 print('************************************************************')
 print('Please enter API key:')
-api_key = raw_input() #sanitize
+api_key = raw_input()
 key_check(api_key)
-print('Please enter fully qualified domain name:') #sanitize
-fqdn = raw_input() #sanitize
+print('Please enter fully qualified domain name:')
+fqdn = raw_input()
 zone_check(api_key, fqdn)
 legacy_ns = ns_get(fqdn)
 pprint(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key))))
