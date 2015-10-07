@@ -68,4 +68,3 @@ print('Please enter fully qualified domain name:') #sanitize
 fqdn = raw_input() #sanitize
 legacy_ns = ns_get(fqdn)
 pprint(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key))))
-
