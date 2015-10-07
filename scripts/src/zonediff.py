@@ -54,6 +54,7 @@ def lookup(record, type, ns):
     return answers_list
 
 def diff_rec(record_list):
+    results = []
     warn = []
     for record in record_list:
         if re.match(r"^\*", record['domain']):
@@ -61,7 +62,10 @@ def diff_rec(record_list):
         old_answers = lookup(record['domain'], record['type'], legacy_ns)
         new_answers = lookup(record['domain'], record['type'], NSONE_NS)
         diff_list = filter(lambda x:x not in new_answers, old_answers)
-        warn.append(diff_list)
+        results.append(diff_list)
+    for item in results:
+        if len(item) != 0:
+            warn.append(item)
     return warn
 
 print('Please enter API key:')
