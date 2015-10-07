@@ -71,7 +71,7 @@ def diff_rec(record_list):
     return warn
 
 def key_check(key):
-    if re.match("^[\w\d]+$", key):
+    if re.match(r"^[a-zA-Z\d]+$", key):
         api_kck_uri = API_URI + "zones/"
         if json.loads(curl_api(api_kck_uri, "GET", AUTH_HEAD + key)) == {'message': 'Unauthorized'}:
             print("Sorry, that key is not valid! Exiting")
@@ -81,9 +81,16 @@ def key_check(key):
         exit()
 
 def zone_check(api_key, domain):
-    api_dck_uri = API_URI + "zones/" + domain
-    if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
-        print("Sorry, " + domain + " is not associated with this API key! Exiting")
+    if len(domain) > 255:
+        print("Domain name is too long! Exiting")
+        exit()
+    if re.match(r"^(([a-zA-Z\d]|[a-zA-Z\d][a-zA-Z\d\-]*[a-zA-Z\d])\.)*([A-Za-z\d]|[A-Za-z\d][A-Za-z\d\-]*[A-Za-z\d])$", domain):
+        api_dck_uri = API_URI + "zones/" + domain
+        if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
+            print("Sorry, " + domain + " is not associated with this API key! Exiting")
+            exit()
+    else:
+        print("Sorry, " + domain + " is not a valid domain name! Exiting")
         exit()
 
 print('Please enter API key:')
