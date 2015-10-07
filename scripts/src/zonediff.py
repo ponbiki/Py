@@ -24,6 +24,7 @@ def curl_api(url, verb, authhead, *args):
     c.perform()
     c.close()
     return buffer.getvalue()
+
 def ns_get(fqdn):
     out = check_output(['dig', '+short', fqdn, 'NS'])
     legacy_ns = out.split()
