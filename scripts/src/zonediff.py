@@ -48,6 +48,7 @@ def lookup(record, type, ns):
     answers_list = []
     for answer in answers:
         if len(answer) != 0:
+            answer = answer.upper()
             answers_list.append(' '.join(answer.split("\t")))
             answers_list.sort()
     return answers_list
