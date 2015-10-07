@@ -35,6 +35,8 @@ def record_list(zone_json):
     rec_list = []
     for records in zone['records']:
         if records['type'] != 'NS':
+            if records['type'] == 'ALIAS':
+                records['type'] == 'CNAME'
             recs = {
                 'domain': records['domain'],
                 'type': records['type']
