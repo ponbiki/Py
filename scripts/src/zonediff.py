@@ -64,7 +64,8 @@ def diff_rec(record_list):
         old_answers = lookup(record['domain'], record['type'], legacy_ns)
         new_answers = lookup(record['domain'], record['type'], NSONE_NS)
         diff_list = filter(lambda x:x not in new_answers, old_answers)
-        results.append(diff_list)
+        if len(diff_list) > 0:
+            results.append([diff_list, record['domain'], record['type']])
     for item in results:
         if len(item) != 0:
             warn.append(item)
@@ -84,7 +85,7 @@ def zone_check(api_key, domain):
     if len(domain) > 255:
         print("Domain name is too long! Exiting")
         exit()
-    if re.match(r"^(([a-zA-Z\d]|[a-zA-Z\d][a-zA-Z\d\-]*[a-zA-Z\d])\.)*([A-Za-z\d]|[A-Za-z\d][A-Za-z\d\-]*[A-Za-z\d])$", domain):
+    if re.match(r"^(?=.{4,255}$)([a-zA-Z\d-][a-zA-Z\d-]{,61}[a-zA-Z\d]\.)+[a-zA-Z\d]{2,5}$", domain):
         api_dck_uri = API_URI + "zones/" + domain
         if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
             print("Sorry, " + domain + " is not associated with this API key! Exiting")
@@ -93,12 +94,19 @@ def zone_check(api_key, domain):
         print("Sorry, " + domain + " is not a valid domain name! Exiting")
         exit()
 
+def presenter(warn_list):
+    item = ''
+    for oops in warn_list:
+        item += "There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
+        item += "Please double check the Answer(s), TTL, and record type\n\n"
+    return item
+
 def banner():
-    print('************************************************************')
-    print('*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*')
-    print('*!!!!!!!!!!!!!Zone_Consistancy_Checker_v1!!!!!!!!!!!!!!!!!!*')
-    print('*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*')
-    print('************************************************************')    
+    print('*****************************************************************')
+    print('*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*')
+    print('*!!!!!!!!!!!!!!!!!!Zone_Consistancy_Checker_v1!!!!!!!!!!!!!!!!!!*')
+    print('*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*')
+    print('*****************************************************************')    
 
 banner()
 print('Please enter API key:')
@@ -108,4 +116,4 @@ print('Please enter fully qualified domain name:')
 fqdn = raw_input()
 zone_check(api_key, fqdn)
 legacy_ns = ns_get(fqdn)
-pprint(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key))))
+print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
