@@ -93,6 +93,11 @@ def zone_check(api_key, domain):
         print("Sorry, " + domain + " is not a valid domain name! Exiting")
         exit()
 
+print('************************************************************')
+print('*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*')
+print('*!!!!!!!!!!!!!Zone_Consistancy_Checker_v1!!!!!!!!!!!!!!!!!!*')
+print('*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*')
+print('************************************************************')
 print('Please enter API key:')
 api_key = raw_input() #sanitize
 key_check(api_key)
