@@ -71,9 +71,13 @@ def diff_rec(record_list):
     return warn
 
 def key_check(key):
-    api_kck_uri = API_URI + "zones/"
-    if json.loads(curl_api(api_kck_uri, "GET", AUTH_HEAD + api_key)) == {'message': 'Unauthorized'}:
-        print("Sorry, that key is not valid! Exiting")
+    if re.match("^[\w\d]+$", key):
+        api_kck_uri = API_URI + "zones/"
+        if json.loads(curl_api(api_kck_uri, "GET", AUTH_HEAD + key)) == {'message': 'Unauthorized'}:
+            print("Sorry, that key is not valid! Exiting")
+            exit()
+    else:
+        print("Sorry, your key is not in the correct format! Exiting")
         exit()
 
 def zone_check(api_key, domain):
