@@ -5,7 +5,6 @@ import pycurl
 import re
 from subprocess import check_output
 from StringIO import StringIO
-from pprint import pprint
 
 API_URI = "https://api.nsone.net/v1/"
 NSONE_NS = "dns1.p01.nsone.net"
