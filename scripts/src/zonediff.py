@@ -70,8 +70,21 @@ def diff_rec(record_list):
             warn.append(item)
     return warn
 
+def key_check(key):
+    api_kck_uri = API_URI + "zones/"
+    if json.loads(curl_api(api_kck_uri, "GET", AUTH_HEAD + api_key)) == {'message': 'Unauthorized'}:
+        print("Sorry, that key is not valid! Exiting")
+        exit()
+
+def zone_check(api_key, domain):
+    api_dck_uri = API_URI + "zones/" + domain
+    if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
+        print("Sorry, " + domain + " is not associated with this API key! Exiting")
+        exit()
+
 print('Please enter API key:')
 api_key = raw_input() #sanitize
+key_check(api_key)
 print('Please enter fully qualified domain name:') #sanitize
 fqdn = raw_input() #sanitize
 legacy_ns = ns_get(fqdn)
