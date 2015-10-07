@@ -87,5 +87,6 @@ api_key = raw_input() #sanitize
 key_check(api_key)
 print('Please enter fully qualified domain name:') #sanitize
 fqdn = raw_input() #sanitize
+zone_check(api_key, fqdn)
 legacy_ns = ns_get(fqdn)
 pprint(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key))))
