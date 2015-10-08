@@ -64,7 +64,7 @@ def diff_rec(record_list):
         new_answers = lookup(record['domain'], record['type'], NSONE_NS)
         diff_list = filter(lambda x:x not in new_answers, old_answers)
         if len(diff_list) > 0:
-            results.append([diff_list, record['domain'], record['type']])
+            results.append([diff_list, record['domain'], record['type'], old_answers, new_answers])
     for item in results:
         if len(item) != 0:
             warn.append(item)
@@ -100,7 +100,14 @@ def presenter(warn_list):
         i += 1
         item += str(i)
         item += " There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
-        item += "  Please double check the Answer(s), TTL, and record type\n\n"
+        item += "  Please double check the Answer(s), TTL, and record type\n"
+        item += "    Current NS answers:\n"
+        for answer in oops[3]:
+            item += answer + "\n"
+        item += "    NSONE NS answers:\n"
+        for answer in oops[4]:
+            item += answer + "\n"
+        item += "\n\n"
     return item
 
 def banner():
