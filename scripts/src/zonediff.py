@@ -49,7 +49,6 @@ def lookup(record, type, ns):
     answers_list = []
     for answer in answers:
         if len(answer) != 0:
-            answer = answer.upper()
             answers_list.append(' '.join(answer.split("\t")))
             answers_list.sort()
     return answers_list
@@ -100,11 +99,11 @@ def presenter(warn_list):
         i += 1
         item += str(i)
         item += " There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
-        item += "  Please double check the Answer(s), TTL, and record type\n"
-        item += "    Current NS answers:\n"
+        item += "!!Please double check the Answer(s), TTL, and record type!!\n"
+        item += "\n>>>>Current NS answers:\n"
         for answer in oops[3]:
             item += answer + "\n"
-        item += "    NSONE NS answers:\n"
+        item += "\n>>>>NSONE NS answers:\n"
         for answer in oops[4]:
             item += answer + "\n"
         item += "\n\n"
@@ -127,6 +126,6 @@ zone_check(api_key, fqdn)
 legacy_ns = ns_get(fqdn)
 print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
 
-#to do rework check on case-sensitive TXT/SRV records (or remove the upper. on the answers)
-# and re-attach * to for random string test answers
+# todo 
+# re-attach * to for random string test answers
 # allow data re-entry
