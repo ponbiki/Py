@@ -75,11 +75,11 @@ def key_check(key):
     if re.match(r"^[a-zA-Z\d]+$", key):
         api_kck_uri = API_URI + "zones/"
         if json.loads(curl_api(api_kck_uri, "GET", AUTH_HEAD + key)) == {'message': 'Unauthorized'}:
-            print("Sorry, that key is not valid! Exiting")
-            exit()
+            print("Sorry, that key is not valid!")
+            return FALSE
     else:
-        print("Sorry, your key is not in the correct format! Exiting")
-        exit()
+        print("Sorry, your key is not in the correct format!")
+        return FALSE
 
 def zone_check(api_key, domain):
     if len(domain) > 255:
@@ -124,9 +124,11 @@ def banner():
     print('*****************************************************************')    
 
 banner()
-print('\nPlease enter API key:')
+print("\nPlease enter API key:")
 api_key = raw_input()
-key_check(api_key)
+while key_check(api_key) == FALSE:
+    print("Please try your API key again:")
+    api_key = raw_input()
 print('\nPlease enter fully qualified domain name:')
 fqdn = raw_input()
 zone_check(api_key, fqdn)
