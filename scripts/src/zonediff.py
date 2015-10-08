@@ -99,8 +99,9 @@ def presenter(warn_list):
     i = 0
     for oops in warn_list:
         i += 1
+        item += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
         item += str(i)
-        item += " There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
+        item += ") There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
         item += "!!Please double check the Answer(s), TTL, and record type!!\n"
         item += "\n>>>> " + legacy_ns + " answers:\n"
         for answer in oops[3]:
@@ -108,7 +109,7 @@ def presenter(warn_list):
         item += "\n>>>> " + NSONE_NS + " answers:\n"
         for answer in oops[4]:
             item += answer + "\n"
-        item += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
+
     return item
 
 def banner():
@@ -119,10 +120,10 @@ def banner():
     print('*****************************************************************')    
 
 banner()
-print('Please enter API key:')
+print('\nPlease enter API key:')
 api_key = raw_input()
 key_check(api_key)
-print('Please enter fully qualified domain name:')
+print('\nPlease enter fully qualified domain name:')
 fqdn = raw_input()
 zone_check(api_key, fqdn)
 legacy_ns = ns_get(fqdn)
@@ -131,4 +132,5 @@ print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", 
 # todo 
 # re-attach * to for random string test answers
 # allow data re-entry
+# try another record
 # allow txt file option "zone_cmp_" + fqdn + int(time.time()) + ".txt"     (needs import time)
