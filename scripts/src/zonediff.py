@@ -102,10 +102,10 @@ def presenter(warn_list):
         item += str(i)
         item += " There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
         item += "!!Please double check the Answer(s), TTL, and record type!!\n"
-        item += "\n>>>>Current NS answers:\n"
+        item += "\n>>>> " + legacy_ns + " answers:\n"
         for answer in oops[3]:
             item += answer + "\n"
-        item += "\n>>>>NSONE NS answers:\n"
+        item += "\n>>>> " + NSONE_NS + " answers:\n"
         for answer in oops[4]:
             item += answer + "\n"
         item += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
