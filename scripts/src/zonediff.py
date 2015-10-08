@@ -113,8 +113,11 @@ def presenter(warn_list):
         item += "\n>>>> " + NSONE_NS + " answers:\n"
         for answer in oops[4]:
             item += answer + "\n"
-
     return item
+
+def try_another(maybe):
+    if maybe.lower()[:1] == 'n':
+        return 1
 
 def banner():
     print('*****************************************************************')
@@ -126,17 +129,22 @@ def banner():
 banner()
 print("\nPlease enter API key:")
 api_key = raw_input()
+
 while key_check(api_key) == 1:
     print("Please try your API key again:")
     api_key = raw_input()
-print('\nPlease enter fully qualified domain name:')
-fqdn = raw_input()
-while zone_check(api_key, fqdn) == 1:
-    print("Please try entering your domain again:")
-    fqdn = raw_input()
-legacy_ns = ns_get(fqdn)
-print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
 
+maybe = 'y'
+while try_another(maybe) != 1:
+    print('\nPlease enter fully qualified domain name:')
+    fqdn = raw_input()
+    while zone_check(api_key, fqdn) == 1:
+        print("Please try entering your domain again:")
+        fqdn = raw_input()
+    legacy_ns = ns_get(fqdn)
+    print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
+    print("Do you want to test another domain? ( Y/n ):")
+    maybe = raw_input()
+    
 # todo 
-# try another record
 # allow txt file option "zone_cmp_" + fqdn + int(time.time()) + ".txt"     (needs import time)
