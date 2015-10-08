@@ -76,10 +76,10 @@ def key_check(key):
         api_kck_uri = API_URI + "zones/"
         if json.loads(curl_api(api_kck_uri, "GET", AUTH_HEAD + key)) == {'message': 'Unauthorized'}:
             print("Sorry, that key is not valid!")
-            return FALSE
+            return 1
     else:
         print("Sorry, your key is not in the correct format!")
-        return FALSE
+        return 1
 
 def zone_check(api_key, domain):
     if len(domain) > 255:
@@ -88,11 +88,11 @@ def zone_check(api_key, domain):
     if re.match(r"^(?=.{4,255}$)([a-zA-Z\d-][a-zA-Z\d-]{,61}[a-zA-Z\d]\.)+[a-zA-Z\d]{2,5}$", domain):
         api_dck_uri = API_URI + "zones/" + domain
         if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
-            print("Sorry, " + domain + " is not associated with this API key! Exiting")
-            exit()
+            print("Sorry, " + domain + " is not associated with this API key!")
+            return 1
     else:
-        print("Sorry, " + domain + " is not a valid domain name! Exiting")
-        exit()
+        print("Sorry, " + domain + " is not a valid domain name!")
+        return 1
 
 def presenter(warn_list):
     item = ''
@@ -126,16 +126,17 @@ def banner():
 banner()
 print("\nPlease enter API key:")
 api_key = raw_input()
-while key_check(api_key) == FALSE:
+while key_check(api_key) == 1:
     print("Please try your API key again:")
     api_key = raw_input()
 print('\nPlease enter fully qualified domain name:')
 fqdn = raw_input()
-zone_check(api_key, fqdn)
+while zone_check(api_key, fqdn) == 1:
+    print("Please try entering your domain again:")
+    fqdn = raw_input()
 legacy_ns = ns_get(fqdn)
 print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
 
 # todo 
-# allow data re-entry
 # try another record
 # allow txt file option "zone_cmp_" + fqdn + int(time.time()) + ".txt"     (needs import time)
