@@ -126,3 +126,7 @@ fqdn = raw_input()
 zone_check(api_key, fqdn)
 legacy_ns = ns_get(fqdn)
 print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
+
+#to do rework check on case-sensitive TXT/SRV records (or remove the upper. on the answers)
+# and re-attach * to for random string test answers
+# allow data re-entry
