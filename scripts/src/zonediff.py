@@ -49,7 +49,9 @@ def lookup(record, type, ns):
     answers_list = []
     for answer in answers:
         if len(answer) != 0:
-            answers_list.append(' '.join(answer.split("\t")))
+            ans_prts = answer.split("\t")
+            ans_prts[0] = ans_prts[0].lower()
+            answers_list.append(' '.join(ans_prts))
             answers_list.sort()
     return answers_list
 
@@ -106,7 +108,7 @@ def presenter(warn_list):
         item += "\n>>>>NSONE NS answers:\n"
         for answer in oops[4]:
             item += answer + "\n"
-        item += "\n\n"
+        item += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
     return item
 
 def banner():
@@ -129,3 +131,4 @@ print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", 
 # todo 
 # re-attach * to for random string test answers
 # allow data re-entry
+# allow txt file option "zone_cmp_" + fqdn + int(time.time()) + ".txt"     (needs import time)
