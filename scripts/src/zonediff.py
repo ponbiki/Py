@@ -95,9 +95,12 @@ def zone_check(api_key, domain):
 
 def presenter(warn_list):
     item = ''
+    i = 0
     for oops in warn_list:
-        item += "There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
-        item += "Please double check the Answer(s), TTL, and record type\n\n"
+        i += 1
+        item += str(i)
+        item += " There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
+        item += "  Please double check the Answer(s), TTL, and record type\n\n"
     return item
 
 def banner():
