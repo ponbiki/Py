@@ -8,7 +8,7 @@ from StringIO import StringIO
 
 API_URI = "https://api.nsone.net/v1/"
 NSONE_NS = "dns1.p01.nsone.net"
-RANDOM_HOSTNAME = "a41be866d9e771d2363d1bb6aa46c5e3"
+RAND_HOST = "a41be866d9e771d2363d1bb6aa46c5e3"
 AUTH_HEAD = "X-NSONE-Key: "
 
 def curl_api(url, verb, authhead, *args):
@@ -60,7 +60,7 @@ def diff_rec(record_list):
     warn = []
     for record in record_list:
         if re.match(r"^\*", record['domain']):
-            re.sub(r"\*", RANDOM_HOSTNAME, record['domain'], max=1)
+            re.sub(r"\*", RAND_HOST, record['domain'], max=1)
         old_answers = lookup(record['domain'], record['type'], legacy_ns)
         new_answers = lookup(record['domain'], record['type'], NSONE_NS)
         diff_list = filter(lambda x:x not in new_answers, old_answers)
@@ -101,6 +101,10 @@ def presenter(warn_list):
         i += 1
         item += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
         item += str(i)
+        ouch = oops[1].split(".")
+        if ouch[0] == RAND_HOST:
+            ouch[0] = "*"
+        oops[1] = '.'.join(ouch)
         item += ") There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
         item += "!!Please double check the Answer(s), TTL, and record type!!\n"
         item += "\n>>>> " + legacy_ns + " answers:\n"
@@ -130,7 +134,6 @@ legacy_ns = ns_get(fqdn)
 print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
 
 # todo 
-# re-attach * to for random string test answers
 # allow data re-entry
 # try another record
 # allow txt file option "zone_cmp_" + fqdn + int(time.time()) + ".txt"     (needs import time)
