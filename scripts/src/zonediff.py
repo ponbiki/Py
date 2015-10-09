@@ -119,7 +119,7 @@ def presenter(warn_list):
 
 def save_file(domain, text):
     thyme = str(time.time()).split('.', 1)[0]
-    f_name = "zone_test_" + domain + thyme + ".txt"
+    f_name = "zone_test_" + domain + "_" + thyme + ".txt"
     try:
         file = open(f_name, 'w')
         file.write(text)
