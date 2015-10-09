@@ -124,11 +124,11 @@ def save_file(domain, text):
         file = open(f_name, 'w')
         file.write(text)
         file.close()
-        good = "\t" + f_name + " was written successfully!"
+        good = "\n-----> " + f_name + " was written successfully!"
         return good
     except:
         bad = "There was a problem wirting to " + check_output(['pwd']).rstrip()
-        return bad        
+        return bad
 
 def try_another(maybe):
     if maybe.lower()[:1] == 'n':
