@@ -1,4 +1,6 @@
 #!/usr/bin/python
+# requires python-software-properties, pycurl, and of course *NIX dig
+
 
 import json
 import pycurl
