@@ -144,11 +144,9 @@ def banner():
 banner()
 print("\nPlease enter API key:")
 api_key = raw_input()
-
 while key_check(api_key) == 1:
     print("Please try your API key again:")
     api_key = raw_input()
-
 maybe = 'y'
 while try_another(maybe) != 1:
     print("\nPlease enter fully qualified domain name:")
