@@ -4,6 +4,7 @@
 import json
 import pycurl
 import re
+import time
 from subprocess import check_output
 from StringIO import StringIO
 
@@ -52,7 +53,7 @@ def lookup(record, type, ns):
         if len(answer) != 0:
             ans_prts = answer.split("\t")
             ans_prts[0] = ans_prts[0].lower()
-            answers_list.append(' '.join(ans_prts))
+            answers_list.append("\t".join(ans_prts))
             answers_list.sort()
     return answers_list
 
@@ -116,6 +117,19 @@ def presenter(warn_list):
             item += answer + "\n"
     return item
 
+def save_file(domain, text):
+    thyme = str(time.time()).split('.', 1)[0]
+    f_name = "zone_test_" + domain + thyme + ".txt"
+    try:
+        file = open(f_name, 'w')
+        file.write(text)
+        file.close()
+        good = "\t" + f_name + " was written successfully!"
+        return good
+    except:
+        bad = "There was a problem wirting to " + check_output(['pwd']).rstrip()
+        return bad        
+
 def try_another(maybe):
     if maybe.lower()[:1] == 'n':
         return 1
@@ -137,15 +151,17 @@ while key_check(api_key) == 1:
 
 maybe = 'y'
 while try_another(maybe) != 1:
-    print('\nPlease enter fully qualified domain name:')
+    print("\nPlease enter fully qualified domain name:")
     fqdn = raw_input()
     while zone_check(api_key, fqdn) == 1:
         print("Please try entering your domain again:")
         fqdn = raw_input()
     legacy_ns = ns_get(fqdn)
-    print(presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
-    print("Do you want to test another domain? ( Y/n ):")
+    results = (presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
+    print(results)
+    print("\nWould you like a text copy in " + check_output(['pwd']).rstrip() + "? ( Y/n )")
+    txt_me = raw_input()
+    if txt_me.lower()[:1] == 'y':
+        print(save_file(fqdn, results))
+    print("\nDo you want to test another domain? ( Y/n ):")
     maybe = raw_input()
-    
-# todo 
-# allow txt file option "zone_cmp_" + fqdn + int(time.time()) + ".txt"     (needs import time)
