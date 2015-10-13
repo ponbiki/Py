@@ -5,6 +5,7 @@ import json
 import pycurl
 import re
 import time
+from getpass import getpass
 from subprocess import check_output
 from StringIO import StringIO
 
@@ -143,10 +144,10 @@ def banner():
 
 banner()
 print("\nPlease enter API key:")
-api_key = raw_input()
+api_key = getpass(prompt="=>")
 while key_check(api_key) == 1:
     print("Please try your API key again:")
-    api_key = raw_input()
+    api_key = getpass(prompt="=>")
 maybe = 'y'
 while try_another(maybe) != 1:
     print("\nPlease enter fully qualified domain name:")
@@ -157,10 +158,12 @@ while try_another(maybe) != 1:
     legacy_ns = ns_get(fqdn)
     results = (presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
     print(results)
-    if len(results) >0:
+    if len(results) > 0:
         print("\nWould you like a text copy in " + check_output(['pwd']).rstrip() + "? ( Y/n )")
         txt_me = raw_input()
         if txt_me.lower()[:1] == 'y':
             print(save_file(fqdn, results))
+    else:
+        print("\nThe records in the " + fqdn + " zone match on the current and NS1 nameservers.")
     print("\nDo you want to test another domain? ( Y/n ):")
     maybe = raw_input()
