@@ -157,9 +157,10 @@ while try_another(maybe) != 1:
     legacy_ns = ns_get(fqdn)
     results = (presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
     print(results)
-    print("\nWould you like a text copy in " + check_output(['pwd']).rstrip() + "? ( Y/n )")
-    txt_me = raw_input()
-    if txt_me.lower()[:1] == 'y':
-        print(save_file(fqdn, results))
+    if len(results) >0:
+        print("\nWould you like a text copy in " + check_output(['pwd']).rstrip() + "? ( Y/n )")
+        txt_me = raw_input()
+        if txt_me.lower()[:1] == 'y':
+            print(save_file(fqdn, results))
     print("\nDo you want to test another domain? ( Y/n ):")
     maybe = raw_input()
