@@ -167,3 +167,8 @@ while try_another(maybe) != 1:
         print("\nThe records in the " + fqdn + " zone match on the current and NS1 nameservers.")
     print("\nDo you want to test another domain? ( Y/n ):")
     maybe = raw_input()
+
+#issues
+#not comparing empty (legacy?) results
+#not handling *
+#add SOA comparison
