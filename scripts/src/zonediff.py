@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # requires python-software-properties, pycurl, and of course *NIX dig
 
+import collections
 import json
 import pycurl
 import re
@@ -66,9 +67,9 @@ def diff_rec(record_list):
             re.sub(r"\*", RAND_HOST, record['domain'], max=1)
         old_answers = lookup(record['domain'], record['type'], legacy_ns)
         new_answers = lookup(record['domain'], record['type'], NSONE_NS)
-        diff_list = filter(lambda x:x not in new_answers, old_answers)
-        if len(diff_list) > 0:
-            results.append([diff_list, record['domain'], record['type'], old_answers, new_answers])
+        diff = lambda x, y: collections.Counter(x) == collections.Counter(y)
+        if not diff(old_answers, new_answers):
+            results.append([record['domain'], record['type'], old_answers, new_answers])
     for item in results:
         if len(item) != 0:
             warn.append(item)
@@ -104,19 +105,20 @@ def presenter(warn_list):
         i += 1
         item += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
         item += str(i)
-        ouch = oops[1].split(".")
+        ouch = oops[0].split(".")
         if ouch[0] == RAND_HOST:
             ouch[0] = "*"
         oops[1] = '.'.join(ouch)
-        item += ") There may be a difference in domain " + oops[1] + " record type " + oops[2] + "\n"
+        item += ") There may be a difference in domain " + oops[0] + " record type " + oops[1] + "\n"
         item += "!!Please double check the Answer(s), TTL, and record type!!\n"
         item += "\n>>>> " + legacy_ns + " answers:\n"
-        for answer in oops[3]:
+        for answer in oops[2]:
             item += answer + "\n"
         item += "\n>>>> " + NSONE_NS + " answers:\n"
-        for answer in oops[4]:
+        for answer in oops[3]:
             item += answer + "\n"
     return item
+
 
 def save_file(domain, text):
     thyme = str(time.time()).split('.', 1)[0]
@@ -169,6 +171,5 @@ while try_another(maybe) != 1:
     maybe = raw_input()
 
 #issues
-#not comparing empty (legacy?) results
 #not handling *
 #add SOA comparison
