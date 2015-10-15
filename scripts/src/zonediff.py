@@ -108,7 +108,7 @@ def presenter(warn_list):
         ouch = oops[0].split(".")
         if ouch[0] == RAND_HOST:
             ouch[0] = "*"
-        oops[1] = '.'.join(ouch)
+        oops[0] = '.'.join(ouch)
         item += ") There may be a difference in domain " + oops[0] + " record type " + oops[1] + "\n"
         item += "!!Please double check the Answer(s), TTL, and record type!!\n"
         item += "\n>>>> " + legacy_ns + " answers:\n"
