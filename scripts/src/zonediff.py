@@ -64,7 +64,7 @@ def diff_rec(record_list):
     warn = []
     for record in record_list:
         if re.match(r"^\*", record['domain']):
-            re.sub(r"\*", RAND_HOST, record['domain'], max=1)
+            re.sub(r"\*", RAND_HOST, record['domain'])
         old_answers = lookup(record['domain'], record['type'], legacy_ns)
         new_answers = lookup(record['domain'], record['type'], NSONE_NS)
         diff = lambda x, y: collections.Counter(x) == collections.Counter(y)
