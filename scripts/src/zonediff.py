@@ -174,3 +174,4 @@ while try_another(maybe) != 1:
 #add SOA comparison
 #gracefully handle domain with no legacy NS
 #trim leading/trailing whitespace from fqdn entry
+#allow more subdomains . . . . . . . . . to deal with ipv6 rdns handoff
