@@ -170,6 +170,7 @@ while try_another(maybe) != 1:
     print("\nDo you want to test another domain? ( Y/n ):")
     maybe = raw_input()
 
-#issues
-#not handling *
+#todo
 #add SOA comparison
+#gracefully handle domain with no legacy NS
+#trim leading/trailing whitespace from fqdn entry
