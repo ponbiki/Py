@@ -89,7 +89,7 @@ def zone_check(api_key, domain):
     if len(domain) > 255:
         print("\nDomain name is too long!")
         return 1
-    if re.match(r"^(?=.{4,255}$)([a-zA-Z\d-][a-zA-Z\d-]{,61}[a-zA-Z\d]\.)+[a-zA-Z\d]{2,5}$", domain):
+    if re.match(r"[a-zA-Z\d-]{,63}(\.[a-zA-Z\d-]{,63})+[a-zA-Z\d]{2,5}$", domain):
         api_dck_uri = API_URI + "zones/" + domain
         if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
             print("\nSorry, " + domain + " is not associated with this API key!")
@@ -174,4 +174,3 @@ while try_another(maybe) != 1:
 #add SOA comparison
 #gracefully handle domain with no legacy NS
 #trim leading/trailing whitespace from fqdn entry
-#allow more subdomains . . . . . . . . . to deal with ipv6 rdns handoff
