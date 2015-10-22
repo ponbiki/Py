@@ -146,31 +146,30 @@ def banner():
 
 banner()
 print("\nPlease enter API key:")
-api_key = getpass(prompt="")
+api_key = getpass(prompt="").strip()
 while key_check(api_key) == 1:
     print("\nPlease try your API key again:")
-    api_key = getpass(prompt="")
+    api_key = getpass(prompt="").strip()
 maybe = 'y'
 while try_another(maybe) != 1:
     print("\nPlease enter fully qualified domain name:")
-    fqdn = raw_input()
+    fqdn = raw_input().strip()
     while zone_check(api_key, fqdn) == 1:
         print("\nPlease try entering your domain again:")
-        fqdn = raw_input()
+        fqdn = raw_input().strip()
     legacy_ns = ns_get(fqdn)
     results = (presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
     print(results)
     if len(results) > 0:
         print("\nWould you like a text copy in " + check_output(['pwd']).rstrip() + "? ( Y/n )")
-        txt_me = raw_input()
+        txt_me = raw_input().strip()
         if txt_me.lower()[:1] == 'y':
             print(save_file(fqdn, results))
     else:
         print("\nThe records in the " + fqdn + " zone match on the current and NS1 nameservers.")
     print("\nDo you want to test another domain? ( Y/n ):")
-    maybe = raw_input()
+    maybe = raw_input().strip()
 
 #todo
 #add SOA comparison
 #gracefully handle domain with no legacy NS
-#trim leading/trailing whitespace from fqdn entry
