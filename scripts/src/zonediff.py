@@ -87,8 +87,8 @@ def key_check(key):
 
 def zone_check(api_key, domain):
     if len(domain) > 255:
-        print("\nDomain name is too long! Exiting")
-        exit()
+        print("\nDomain name is too long!")
+        return 1
     if re.match(r"^(?=.{4,255}$)([a-zA-Z\d-][a-zA-Z\d-]{,61}[a-zA-Z\d]\.)+[a-zA-Z\d]{2,5}$", domain):
         api_dck_uri = API_URI + "zones/" + domain
         if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
