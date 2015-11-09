@@ -15,6 +15,7 @@ NSONE_NS = "dns1.p01.nsone.net"
 RAND_HOST = "a41be866d9e771d2363d1bb6aa46c5e3"
 AUTH_HEAD = "X-NSONE-Key: "
 
+
 def curl_api(url, verb, authhead, *args):
     buffer = StringIO()
     c = pycurl.Curl()
@@ -28,10 +29,12 @@ def curl_api(url, verb, authhead, *args):
     c.close()
     return buffer.getvalue()
 
+
 def ns_get(fqdn):
     out = check_output(['dig', '+short', fqdn, 'NS'])
     legacy_ns = out.split()
     return legacy_ns[0]
+
 
 def record_list(zone_json):
     zone = json.loads(zone_json)
@@ -47,6 +50,7 @@ def record_list(zone_json):
             rec_list.append(recs)
     return rec_list
 
+
 def lookup(record, type, ns):
     out = check_output(['dig', '+nocmd', '+noall', '+answer', '+ttlid', type, '@' + ns, record])
     answers = out.split("\n")
@@ -58,6 +62,7 @@ def lookup(record, type, ns):
             answers_list.append("\t".join(ans_prts))
             answers_list.sort()
     return answers_list
+
 
 def diff_rec(record_list):
     results = []
@@ -75,6 +80,7 @@ def diff_rec(record_list):
             warn.append(item)
     return warn
 
+
 def key_check(key):
     if re.match(r"^[a-zA-Z\d]+$", key):
         api_kck_uri = API_URI + "zones/"
@@ -84,6 +90,7 @@ def key_check(key):
     else:
         print("\nSorry, your key is not in the correct format!")
         return 1
+
 
 def zone_check(api_key, domain):
     if len(domain) > 255:
@@ -97,6 +104,7 @@ def zone_check(api_key, domain):
     else:
         print("\nSorry, " + domain + " is not a valid domain name!")
         return 1
+
 
 def presenter(warn_list):
     item = ''
@@ -133,9 +141,11 @@ def save_file(domain, text):
         bad = "\nThere was a problem writing to " + check_output(['pwd']).rstrip()
         return bad
 
+
 def try_another(maybe):
     if maybe.lower()[:1] == 'n':
         return 1
+
 
 def banner():
     print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
@@ -170,6 +180,6 @@ while try_another(maybe) != 1:
     print("\nDo you want to test another domain? ( Y/n ):")
     maybe = raw_input().strip()
 
-#todo
-#add SOA comparison
-#gracefully handle domain with no legacy NS
+# todo
+# add SOA comparison
+# gracefully handle domain with no legacy NS
