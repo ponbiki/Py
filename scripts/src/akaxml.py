@@ -17,11 +17,21 @@ class Ripper():
         self.email_notification = obj['domain']['email-notification']
         self.max_imbalance = obj['domain']['max-imbalance']
         self.load_monitoring_status = obj['domain']['load-monitoring.status']
-
-
-
+        self.data_centers = []
+        for dc in obj['domain']['datacenter']:
+            dc_dict = {"nickname": dc['nickname'],
+                       "city": dc['city'],
+                       "state": dc['state-or-province'],
+                       "country": dc['country'],
+                       "latitude": dc['latitude'],
+                       "longitude": dc['longitude']}            
+            self.data_centers.append({dc['@name']: dc_dict})
+        self.properties = []
+        for prop in obj['domain']['property']:
+            prop_dict = {}
+            self.properties.append({prop['@name']: prop_dict})
 
 
 tester = Ripper('e.xx.openx.com.akadns.net.xsd')
 
-pprint(dir(tester))
+pprint(tester.data_centers)
