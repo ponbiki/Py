@@ -32,4 +32,4 @@ for sub in ip_list:
    data = sub.values()[0]
    shunt = template[data]
    shuntjs = {snkey: shunt}
-   print(json.dumps(shuntjs))
+   print(json.dumps(shuntjs))[1:-1]
