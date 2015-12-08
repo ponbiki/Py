@@ -1,9 +1,12 @@
 #!/usr/bin/python
 
+# Compares new list of json shunts
+# to existing and builds a list of any duplication
+
 from pprint import pprint
 
-new_shunt_file = 'azure.json'
-production_shunt_file = 'geo_shunts.json'
+new_shunt_file = 'azure.json' # new list
+production_shunt_file = 'geo_shunts.json'  # production list
 
 new_list = []
 with open(new_shunt_file, 'r') as f:
