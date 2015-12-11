@@ -2,6 +2,7 @@
 
 import time
 import sys
+import re
 import iptc
 
 INTERVAL = 1
@@ -32,52 +33,30 @@ if __name__ == "__main__":
 # <METRIC> <UNIX_TIMESTAMP> <VALUE>
 # Rules Matched / drops / packets / bytes
 
-table = iptc.Table(iptc.Table.FILTER)
-chain = iptc.Chain(table, 'INPUT')
-for rule in chain.rules:
- (packets, bytes) = rule.get_counters()
- print packets
-sys.stdout.flush()
-time.sleep(1)
-table.refresh()
-for rule in chain.rules:
-    (packets, bytes) = rule.get_counters()
-    print packets
-
-'''
-#!/usr/bin/python
-
-import time
-import sys
-import iptc
-
-table = iptc.Table(iptc.Table.FILTER)
-for chain in table.chains:
-    print(chain.name)
-    print(int(time.time()))
-
-
-
-
-while True:
-   for chain in table.chains:
-      chain = iptc.Chain(table, chain.name)
-      table.refresh()
-      for rule in chain.rules:
-         (packets, bytes) = rule.get_counters()
-         print chain.name
-         print packets
-         print bytes
-   time.sleep(1)
-   sys.stdout.flush()
-while True:
-   table = iptc.Table(iptc.Table.FILTER)
-   chain = iptc.Chain(table, 'OUTPUT')
-   table.refresh()
-   for rule in chain.rules:
-      (packets, bytes) = rule.get_counters()
-      print packets
-   time.sleep(1)
-   sys.stdout.flush()
-
-'''
+params = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
+for param in params:
+    table = iptc.Table(param)
+    for chain in table.chains:
+        comment_cnt = 0
+        pkt = 0
+        byt = 0
+        if re.match('NS1', chain.name):
+            p = chain.name.split('_')
+            chainz = p[0] + '_' + p[1]
+        else:
+            chainz = chain.name
+        for rule in chain.rules:
+#            print rule.protocol, rule.src, rule.dst, rule.in_interface, rule.out_interface
+            for match in rule.matches:
+                if match.name == "comment":
+                    comment = match.comment.replace('\s', '_')
+                else:
+                    comment_cnt += 1
+                    comment = "no_comment" + str(comment_cnt) + "_" + str(param)
+                match_name = match.name
+                rule_target_name = rule.target.name
+                (packets, bytes) = rule.get_counters()
+                pkt += packets
+                byt += bytes
+                print str(param).lower(), chainz.lower(), comment, 'packets', int(time.time()), byt
+                print str(param).lower(), chainz.lower(), comment, 'bytes', int(time.time()), pkt
