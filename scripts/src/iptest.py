@@ -279,60 +279,75 @@ for param in params:
                 elif str(param).lower() == 'nat':
                     if str(chainz).lower() == 'input':
                         if str(rule_tgt_name).lower() == 'accept':
+                            ndia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_input_accept_pkt += packets
                             nat_def_input_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            ndim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_input_mark_pkt += packets
                             nat_def_input_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            ndid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_input_drop_pkt += packets
                             nat_def_input_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'output':
                         if str(rule_tgt_name).lower() == 'accept':
+                            ndoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_output_accept_pkt += packets
                             nat_def_output_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            ndom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_output_mark_pkt += packets
                             nat_def_output_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            ndod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_output_drop_pkt += packets
                             nat_def_output_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'preroute':
                         if str(rule_tgt_name).lower() == 'accept':
+                            ndpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_prert_accept_pkt += packets
                             nat_def_prert_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            ndpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_prert_mark_pkt += packets
                             nat_def_prert_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            ndpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_prert_drop_pkt += packets
                             nat_def_prert_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'postroute':
                         if str(rule_tgt_name).lower() == 'accept':
+                            ndPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_postrt_accept_pkt += packets
                             nat_def_postrt_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            ndPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_postrt_mark_pkt += packets
                             nat_def_postrt_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            ndPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_postrt_drop_pkt += packets
                             nat_def_postrt_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'ns1_postroute':
                         if str(rule_tgt_name).lower() == 'accept':
+                            nnPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_ns1_postrt_accept_pkt += packets
                             nat_def_ns1_postrt_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            nnPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_ns1_postrt_mark_pkt += packets
                             nat_def_ns1_postrt_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            nnPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_ns1_postrt_drop_pkt += packets
                             nat_def_ns1_postrt_drop_byt += bytes
                         else:
@@ -342,72 +357,90 @@ for param in params:
                 elif str(param).lower() == 'mangle':
                     if str(chainz).lower() == 'input':
                         if str(rule_tgt_name).lower() == 'accept':
+                            mdia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_input_accept_pkt += packets
                             mangle_def_input_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            mdim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_input_mark_pkt += packets
                             mangle_def_input_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            mdid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_input_drop_pkt += packets
                             mangle_def_input_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'forward':
                         if str(rule_tgt_name).lower() == 'accept':
+                            mdfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_forward_accept_pkt += packets
                             mangle_def_forward_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            mdfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_forward_mark_pkt += packets
                             mangle_def_forward_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            mdfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_forward_drop_pkt += packets
                             mangle_def_forward_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'output':
                         if str(rule_tgt_name).lower() == 'accept':
+                            mdoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_output_accept_pkt += packets
                             mangle_def_output_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            mdom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_output_mark_pkt += packets
                             mangle_def_output_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            mdod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_output_drop_pkt += packets
                             mangle_def_output_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'preroute':
                         if str(rule_tgt_name).lower() == 'accept':
+                            mdpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_prert_accept_pkt += packets
                             mangle_def_prert_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            mdpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_prert_mark_pkt += packets
                             mangle_def_prert_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            mdpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_prert_drop_pkt += packets
                             mangle_def_prert_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'postroute':
                         if str(rule_tgt_name).lower() == 'accept':
+                            mdPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_postrt_accept_pkt += packets
                             mangle_def_postrt_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            mdPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_postrt_mark_pkt += packets
                             mangle_def_postrt_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            mdPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_postrt_drop_pkt += packets
                             mangle_def_postrt_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'ns1_postroute':
                         if str(rule_tgt_name).lower() == 'accept':
+                            mnPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_ns1_postrt_accept_pkt += packets
                             mangle_def_ns1_postrt_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            mnPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_ns1_postrt_mark_pkt += packets
                             mangle_def_ns1_postrt_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            mnPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             mangle_def_ns1_postrt_drop_pkt += packets
                             mangle_def_ns1_postrt_drop_byt += bytes
                         else:
@@ -417,24 +450,30 @@ for param in params:
                 elif string(param).lower() == 'raw':
                     if str(chainz).lower() == 'output':
                         if str(rule_tgt_name).lower() == 'accept':
+                            ndoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_output_accept_pkt += packets
                             nat_def_output_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            ndom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_output_mark_pkt += packets
                             nat_def_output_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            ndod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_output_drop_pkt += packets
                             nat_def_output_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'preroute':
                         if str(rule_tgt_name).lower() == 'accept':
+                            ndpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_prert_accept_pkt += packets
                             nat_def_prert_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            ndpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_prert_mark_pkt += packets
                             nat_def_prert_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            ndpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             nat_def_prert_drop_pkt += packets
                             nat_def_prert_drop_byt += bytes
                         else:
@@ -447,147 +486,292 @@ for param in params:
                 pass
 
 if filter_def_input_accept_pkt > 0:
-    print fdia[0], fdia[1], fdia[2], 'packets', int(time.time()), filter_def_input_accept_pkt
-    print fdia[0], fdia[1], fdia[2], 'bytes', int(time.time()), filter_def_input_accept_byt
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdia[0], fdia[2], 'packets', int(time.time()), filter_def_input_accept_pkt, fdia[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdia[0], fdia[2], 'bytes', int(time.time()), filter_def_input_accept_byt, fdia[1])
 else:
     pass
 if filter_def_input_mark_pkt > 0:
-    print fdim[0], fdim[1], fdim[2], 'packets', int(time.time()), filter_def_input_mark_pkt
-    print fdim[0], fdim[1], fdim[2], 'bytes', int(time.time()), filter_def_input_mark_byt
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdim[0], fdim[2], 'packets', int(time.time()), filter_def_input_mark_pkt, fdim[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdim[0], fdim[2], 'bytes', int(time.time()), filter_def_input_mark_byt, fdim[1])
 else:
     pass
 if filter_def_input_drop_pkt > 0:
-    print fdid[0], fdid[1], fdid[2], 'packets', int(time.time()), filter_def_input_drop_pkt
-    print fdid[0], fdid[1], fdid[2], 'bytes', int(time.time()), filter_def_input_drop_byt
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdid[0], fdid[2],'packets', int(time.time()), filter_def_input_drop_pkt, fdid[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdid[0], fdid[2], 'bytes', int(time.time()), filter_def_input_drop_byt, fdid[1])
 else:
     pass
 if filter_def_forward_accept_pkt > 0:
-if filter_def_forward_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdfa[0], fdfa[2], 'packets', int(time.time()), filter_def_forward_accept_pkt, fdfa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdfa[0], fdfa[2], 'bytes', int(time.time()), filter_def_forward_accept_byt, fdfa[1])
+else:
+    pass
 if filter_def_forward_mark_pkt > 0:
-if filter_def_forward_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdfm[0], fdfm[2], 'packets', int(time.time()), filter_def_forward_mark_pkt, fdfm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdfm[0], fdfm[2], 'bytes', int(time.time()), filter_def_forward_mark_byt, fdfm[1])
+else:
+    pass
 if filter_def_forward_drop_pkt > 0:
-if filter_def_forward_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdfd[0], fdfd[2], 'packets', int(time.time()), filter_def_forward_drop_pkt, fdfd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdfd[0], fdfd[2], 'bytes', int(time.time()), filter_def_forward_drop_byt, fdfd[1])
+else:
+    pass
 if filter_def_output_accept_pkt > 0:
-if filter_def_output_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdoa[0], fdoa[2], 'packets', int(time.time()), filter_def_output_accept_pkt, fdoa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdoa[0], fdoa[2], 'bytes', int(time.time()), filter_def_output_accept_byt, fdoa[1])
+else:
+    pass
 if filter_def_output_mark_pkt > 0:
-if filter_def_output_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdom[0], fdom[2], 'packets', int(time.time()), filter_def_output_mark_pkt, fdom[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdom[0], fdom[2], 'bytes', int(time.time()), filter_def_output_mark_byt, fdom[1])
+else:
+    pass
 if filter_def_output_drop_pkt > 0:
-if filter_def_output_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdod[0], fdod[2], 'packets', int(time.time()), filter_def_output_drop_pkt, fdod[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fdod[0], fdod[2], 'bytes', int(time.time()), filter_def_output_drop_byt, fdod[1])
+else:
+    pass
 if filter_ns1_input_accept_pkt > 0:
-if filter_ns1_input_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnia[0], fnia[2], 'packets', int(time.time()), filter_ns1_input_accept_pkt, fnia[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnia[0], fnia[2], 'bytes', int(time.time()), filter_ns1_input_accept_byt, fnia[1])
+else:
+    pass
 if filter_ns1_input_mark_pkt > 0:
-if filter_ns1_input_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnim[0], fnim[2], 'packets', int(time.time()), filter_ns1_input_mark_pkt, fnim[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnim[0], fnim[2], 'bytes', int(time.time()), filter_ns1_input_mark_byt, fnim[1])
+else:
+    pass
 if filter_ns1_input_drop_pkt > 0:
-if filter_ns1_input_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnid[0], fnid[2], 'packets', int(time.time()), filter_ns1_input_drop_pkt, fnid[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnid[0], fnid[2], 'bytes', int(time.time()), filter_ns1_input_drop_byt, fnid[1])
+else:
+    pass
 if filter_ns1_forward_accept_pkt > 0:
-if filter_ns1_forward_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnfa[0], fnfa[2], 'packets', int(time.time()), filter_ns1_forward_accept_pkt, fnfa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnfa[0], fnfa[2], 'bytes', int(time.time()), filter_ns1_forward_accept_byt, fnfa[1])
+else:
+    pass
 if filter_ns1_forward_mark_pkt > 0:
-if filter_ns1_forward_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnfm[0], fnfm[2], 'packets', int(time.time()), filter_ns1_forward_mark_pkt, fnfm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnfm[0], fnfm[2], 'bytes', int(time.time()), filter_ns1_forward_mark_byt, fnfm[1])
+else:
+    pass
 if filter_ns1_forward_drop_pkt > 0:
-if filter_ns1_forward_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnfd[0], fnfd[2], 'packets', int(time.time()), filter_ns1_forward_drop_pkt, fnfd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnfd[0], fnfd[2], 'bytes', int(time.time()), filter_ns1_forward_drop_byt, fnfd[1])
+else:
+    pass
 if filter_ns1_output_accept_pkt > 0:
-if filter_ns1_output_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnoa[0], fnoa[2], 'packets', int(time.time()), filter_ns1_output_accept_pkt, fnoa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnoa[0], fnoa[2], 'bytes', int(time.time()), filter_ns1_output_accept_byt, fnoa[1])
+else:
+    pass
 if filter_ns1_output_mark_pkt > 0:
-if filter_ns1_output_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnom[0], fnom[2], 'packets', int(time.time()), filter_ns1_output_mark_pkt, fnom[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnom[0], fnom[2], 'bytes', int(time.time()), filter_ns1_output_mark_byt, fnom[1])
+else:
+    pass
 if filter_ns1_output_drop_pkt > 0:
-if filter_ns1_output_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnod[0], fnod[2], 'packets', int(time.time()), filter_ns1_output_drop_pkt, fnod[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (fnod[0], fnod[2], 'bytes', int(time.time()), filter_ns1_output_drop_byt, fnod[1])
+else:
+    pass
 if nat_def_input_accept_pkt > 0:
-if nat_def_input_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndia[0], ndia[2], 'packets', int(time.time()), nat_def_input_accept_pkt, ndia[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndia[0], ndia[2], 'bytes', int(time.time()), nat_def_input_accept_byt, ndia[1])
+else:
+    pass
 if nat_def_input_mark_pkt > 0:
-if nat_def_input_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndim[0], ndim[2], 'packets', int(time.time()), nat_def_input_mark_pkt, ndim[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndim[0], ndim[2], 'bytes', int(time.time()), nat_def_input_mark_byt, ndim[1])
+else:
+    pass
 if nat_def_input_drop_pkt > 0:
-if nat_def_input_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndid[0], ndid[2], 'packets', int(time.time()), nat_def_input_drop_pkt, ndid[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndid[0], ndid[2], 'bytes', int(time.time()), nat_def_input_drop_byt, ndid[1])
+else:
+    pass
 if nat_def_output_accept_pkt > 0:
-if nat_def_output_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndoa[0], ndoa[2], 'packets', int(time.time()), nat_def_output_accept_pkt, ndoa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndoa[0], ndoa[2], 'bytes', int(time.time()), nat_def_output_accept_byt, ndoa[1])
+else:
+    pass
 if nat_def_output_mark_pkt > 0:
-if nat_def_output_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndom[0], ndom[2], 'packets', int(time.time()), nat_def_output_mark_pkt, ndom[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndom[0], ndom[2], 'bytes', int(time.time()), nat_def_output_mark_byt, ndom[1])
+else:
+    pass
 if nat_def_output_drop_pkt > 0:
-if nat_def_output_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndod[0], ndod[2], 'packets', int(time.time()), nat_def_output_drop_pkt, ndod[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndod[0], ndod[2], 'bytes', int(time.time()), nat_def_output_drop_byt, ndod[1])
+else:
+    pass
 if nat_def_prert_accept_pkt > 0:
-if nat_def_prert_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndpa[0], ndpa[2], 'packets', int(time.time()), nat_def_prert_accept_pkt, ndpa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndpa[0], ndpa[2], 'bytes', int(time.time()), nat_def_prert_accept_byt, ndpa[1])
+else:
+    pass
 if nat_def_prert_mark_pkt > 0:
-if nat_def_prert_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndpm[0], ndpm[2], 'packets', int(time.time()), nat_def_prert_mark_pkt, ndpm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndpm[0], ndpm[2], 'bytes', int(time.time()), nat_def_prert_mark_byt, ndpm[1])
+else:
+    pass
 if nat_def_prert_drop_pkt > 0:
-if nat_def_prert_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndpd[0], ndpd[2], 'packets', int(time.time()), nat_def_prert_drop_pkt, ndpd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndpd[0], ndpd[2], 'bytes', int(time.time()), nat_def_prert_drop_byt, ndpd[1])
+else:
+    pass
 if nat_def_postrt_accept_pkt > 0:
-if nat_def_postrt_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndPa[0], ndPa[2], 'packets', int(time.time()), nat_def_postrt_accept_pkt, ndPa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndPa[0], ndPa[2], 'bytes', int(time.time()), nat_def_postrt_accept_byt, ndPa[1])
+else:
+    pass
 if nat_def_postrt_mark_pkt > 0:
-if nat_def_postrt_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndPm[0], ndPm[2], 'packets', int(time.time()), nat_def_postrt_mark_pkt, ndPm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndPm[0], ndPm[2], 'bytes', int(time.time()), nat_def_postrt_mark_byt, ndPm[1])
+else:
+    pass
 if nat_def_postrt_drop_pkt > 0:
-if nat_def_postrt_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndPd[0], ndPd[2], 'packets', int(time.time()), nat_def_postrt_drop_pkt, ndPd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (ndPd[0], ndPd[2], 'bytes', int(time.time()), nat_def_postrt_drop_byt, ndPd[1])
+else:
+    pass
 if nat_ns1_postrt_accept_pkt > 0:
-if nat_ns1_postrt_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (nnPa[0], nnPa[2], 'packets', int(time.time()), nat_ns1_postrt_accept_pkt, nnPa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (nnPa[0], nnPa[2], 'bytes', int(time.time()), nat_ns1_postrt_accept_byt, nnPa[1])
+else:
+    pass
 if nat_ns1_postrt_mark_pkt > 0:
-if nat_ns1_postrt_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (nnPm[0], nnPm[2], 'packets', int(time.time()), nat_ns1_postrt_mark_pkt, nnPm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (nnPm[0], nnPm[2], 'bytes', int(time.time()), nat_ns1_postrt_mark_byt, nnPm[1])
+else:
+    pass
 if nat_ns1_postrt_drop_pkt > 0:
-if nat_ns1_postrt_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (nnPd[0], nnPd[2], 'packets', int(time.time()), nat_ns1_postrt_drop_pkt, nnPd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (nnPd[0], nnPd[2], 'bytes', int(time.time()), nat_ns1_postrt_drop_byt, nnPd[1])
+else:
+    pass
 if mangle_def_input_accept_pkt > 0:
-if mangle_def_input_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdia[0], mdia[2], 'packets', int(time.time()), mangle_def_input_accept_pkt, mdia[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdia[0], mdia[2], 'bytes', int(time.time()), mangle_def_input_accept_byt, mdia[1])
+else:
+    pass
 if mangle_def_input_mark_pkt > 0:
-if mangle_def_input_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdim[0], mdim[2], 'packets', int(time.time()), mangle_def_input_mark_pkt, mdim[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdim[0], mdim[2], 'bytes', int(time.time()), mangle_def_input_mark_byt, mdim[1])
+else:
+    pass
 if mangle_def_input_drop_pkt > 0:
-if mangle_def_input_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdip[0], mdip[2], 'packets', int(time.time()), mangle_def_input_drop_pkt, mdip[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdip[0], mdip[2], 'bytes', int(time.time()), mangle_def_input_drop_byt, mdip[1])
+else:
+    pass
 if mangle_def_forward_accept_pkt > 0:
-if mangle_def_forward_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdfa[0], mdfa[2], 'packets', int(time.time()), mangle_def_forward_accept_pkt, mdfa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdfa[0], mdfa[2], 'bytes', int(time.time()), mangle_def_forward_accept_byt, mdfa[1])
+else:
+    pass
 if mangle_def_forward_mark_pkt > 0:
-if mangle_def_forward_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdfm[0], mdfm[2], 'packets', int(time.time()), mangle_def_forward_mark_pkt, mdfm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdfm[0], mdfm[2], 'bytes', int(time.time()), mangle_def_forward_mark_byt, mdfm[1])
+else:
+    pass
 if mangle_def_forward_drop_pkt > 0:
-if mangle_def_forward_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdfd[0], mdfd[2], 'packets', int(time.time()), mangle_def_forward_drop_pkt, mdfd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdfd[0], mdfd[2], 'bytes', int(time.time()), mangle_def_forward_drop_byt, mdfd[1])
+else:
+    pass
 if mangle_def_output_accept_pkt > 0:
-if mangle_def_output_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdoa[0], mdoa[2], 'packets', int(time.time()), mangle_def_output_accept_pkt, mdoa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdoa[0], mdoa[2], 'bytes', int(time.time()), mangle_def_output_accept_byt, mdoa[1])
+else:
+    pass
 if mangle_def_output_mark_pkt > 0:
-if mangle_def_output_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdom[0], mdom[2], 'packets', int(time.time()), mangle_def_output_mark_pkt, mdom[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdom[0], mdom[2], 'bytes', int(time.time()), mangle_def_output_mark_byt, mdom[1])
+else:
+    pass
 if mangle_def_output_drop_pkt > 0:
-if mangle_def_output_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdod[0], mdod[2], 'packets', int(time.time()), mangle_def_output_drop_pkt, mdod[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdod[0], mdod[2], 'bytes', int(time.time()), mangle_def_output_drop_byt, mdod[1])
+else:
+    pass
 if mangle_def_prert_accept_pkt > 0:
-if mangle_def_prert_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdpa[0], mdpa[2], 'packets', int(time.time()), mangle_def_prert_accept_pkt, mdpa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdpa[0], mdpa[2], 'bytes', int(time.time()), mangle_def_prert_accept_byt, mdpa[1])
+else:
+    pass
 if mangle_def_prert_mark_pkt > 0:
-if mangle_def_prert_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdpm[0], mdpm[2], 'packets', int(time.time()), mangle_def_prert_mark_pkt, mdpm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdpm[0], mdpm[2], 'bytes', int(time.time()), mangle_def_prert_mark_byt, mdpm[1])
+else:
+    pass
 if mangle_def_prert_drop_pkt > 0:
-if mangle_def_prert_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdpd[0], mdpd[2], 'packets', int(time.time()), mangle_def_prert_drop_pkt, mdpd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdpd[0], mdpd[2], 'bytes', int(time.time()), mangle_def_prert_drop_byt, mdpd[1])
+else:
+    pass
 if mangle_def_postrt_accept_pkt > 0:
-if mangle_def_postrt_accept_byt > 0:
-if mangle_def_postrt_mark_pkt > 0:
-if mangle_def_postrt_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdPa[0], mdPa[2], 'packets', int(time.time()), mangle_def_postrt_accept_pkt, mdPa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdPa[0], mdPa[2], 'bytes', int(time.time()), mangle_def_postrt_accept_byt, mdPa[1])
+else:
+    pass
+if mangle_def_postrt_mark_pkt > 0: 
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdPm[0], mdPm[2], 'packets', int(time.time()), mangle_def_postrt_mark_pkt, mdPm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdPm[0], mdPm[2], 'bytes', int(time.time()), mangle_def_postrt_mark_byt, mdPm[1])
+else:
+    pass
 if mangle_def_postrt_drop_pkt > 0:
-if mangle_def_postrt_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdPd[0], mdPd[2], 'packets', int(time.time()), mangle_def_postrt_drop_pkt, mdPd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mdPd[0], mdPd[2], 'bytes', int(time.time()), mangle_def_postrt_drop_byt, mdPd[1])
+else:
+    pass
 if mangle_ns1_postrt_accept_pkt > 0:
-if mangle_ns1_postrt_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mnPa[0], mnPa[2], 'packets', int(time.time()), mangle_ns1__postrt_accept_pkt, mnPa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mnPa[0], mnPa[2], 'bytes', int(time.time()), mangle_ns1__postrt_accept_byt, mnPa[1])
+else:
+    pass
 if mangle_ns1_postrt_mark_pkt > 0:
-if mangle_ns1_postrt_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mnPm[0], mnPm[2], 'packets', int(time.time()), mangle_ns1__postrt_mark_pkt, mnPm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mnPm[0], mnPm[2], 'bytes', int(time.time()), mangle_ns1__postrt_mark_byt, mnPm[1])
+else:
+    pass
 if mangle_ns1_postrt_drop_pkt > 0:
-if mangle_ns1_postrt_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mnPd[0], mnPd[2], 'packets', int(time.time()), mangle_ns1__postrt_drop_pkt, mnPd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (mnPd[0], mnPd[2], 'bytes', int(time.time()), mangle_ns1__postrt_drop_byt, mnPd[1])
+else:
+    pass
 if raw_def_output_accept_pkt > 0:
-if raw_def_output_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdoa[0], rdoa[2], 'packets', int(time.time()), raw_def_output_accept_pkt, rdoa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdoa[0], rdoa[2], 'bytes', int(time.time()), raw_def_output_accept_byt, rdoa[1])
+else:
+    pass
 if raw_def_output_mark_pkt > 0:
-if raw_def_output_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdom[0], rdom[2], 'packets', int(time.time()), raw_def_output_mark_pkt, rdom[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdom[0], rdom[2], 'bytes', int(time.time()), raw_def_output_mark_byt, rdom[1])
+else:
+    pass
 if raw_def_output_drop_pkt > 0:
-if raw_def_output_drop_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdod[0], rdod[2], 'packets', int(time.time()), raw_def_output_drop_pkt, rdod[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdod[0], rdod[2], 'bytes', int(time.time()), raw_def_output_drop_byt, rdod[1])
+else:
+    pass
 if raw_def_prert_accept_pkt > 0:
-if raw_def_prert_accept_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpa[0], rdpa[2], 'packets', int(time.time()), raw_def_prert_accept_pkt, rdpa[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpa[0], rdpa[2], 'bytes', int(time.time()), raw_def_prert_accept_byt, rdpa[1])
+else:
+    pass
 if raw_def_prert_mark_pkt > 0:
-if raw_def_prert_mark_byt > 0:
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpm[0], rdpm[2], 'packets', int(time.time()), raw_def_prert_mark_pkt, rdpm[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpm[0], rdpm[2], 'bytes', int(time.time()), raw_def_prert_mark_byt, rdpm[1])
+else:
+    pass
 if raw_def_prert_drop_pkt > 0:
-if raw_def_prert_drop_byt > 0:
-'''
-'''
-params = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
-for param in params:
-    table = iptc.Table(param)
-    print '\n\n\n>>>>>>>>' +  str(param).upper()
-    for chain in table.chains:
-        print "======================="
-        print "Chain ", chain.name
-        for rule in chain.rules:
-            print "Rule", "proto:", rule.protocol, "src:", rule.src, "dst:", \
-                  rule.dst, "in:", rule.in_interface, "out:", rule.out_interface,
-            print "Matches:",
-            for match in rule.matches:
-                print match.name,
-            print "Target:",
-            print rule.target.name
-    print "======================="
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpd[0], rdpd[2], 'packets', int(time.time()), raw_def_prert_drop_pkt, rdpd[1])
+    print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpd[0], rdpd[2], 'bytes', int(time.time()), raw_def_prert_drop_byt, rdpd[1])
+else:
+    pass
 
+'''
 
 #                print "FilterType: %s\tChain: %10s\tProtocol: %s\tSource: %31s\tDport: %11s\tState: %18s\tTarget: %s\t%s\t%d\t%d" % (str(param).lower(), chainz.lower(), rule.protocol, rule.src, match.dport, match.state, rule_target_name, 'packets', int(time.time()), bytes)
 #                print str(param).lower(), chainz.lower(), rule.protocol, rule.src, match.dport, match.state, rule.dst, rule.in_interface, rule.out_interface, rule_target_name, 'packets', int(time.time()), pkt
@@ -597,59 +781,4 @@ for param in params:
 #                    print "ho"
                 print '%s\t%s\t%23s\t%18s\t%15d\t%d' % (str(param).lower(), str(chainz).lower(), str(rule_target_name).lower(), 'packets', int(time.time()), packets)
                 print '%s\t%s\t%23s\t%18s\t%15d\t%d' % (str(param).lower(), str(chainz).lower(), str(rule_target_name).lower(), 'bytes', int(time.time()), bytes)
-'''
-
-<<<<<<< Upstream, based on origin/master
-=======
-'''
->>>>>>>>FILTER
-=======================
-Chain  INPUT
-=======================
-Chain  FORWARD
-=======================
-Chain  OUTPUT
-=======================
-Chain  NS1_FORWARD_1449246906
-=======================
-Chain  NS1_INPUT_1449246906
-=======================
-Chain  NS1_OUTPUT_1449246906
-=======================
-
->>>>>>>>NAT
-=======================
-Chain  PREROUTING
-=======================
-Chain  INPUT
-=======================
-Chain  OUTPUT
-=======================
-Chain  POSTROUTING
-=======================
-Chain  NS1_POSTROUTING_1449246906
-=======================
-
->>>>>>>>MANGLE
-=======================
-Chain  PREROUTING
-=======================
-Chain  INPUT
-=======================
-Chain  FORWARD
-=======================
-Chain  OUTPUT
-=======================
-Chain  POSTROUTING
-=======================
-Chain  NS1_PREROUTING_1449246906
-=======================
-
->>>>>>>>RAW
-=======================
-Chain  PREROUTING
-=======================
-Chain  OUTPUT
-=======================
-
 '''
