@@ -17,11 +17,9 @@ def debug(msg):
 class IpTabler():
     """Capture IPTables ststistics: Rules matched, Packets/Bytes dropped, Packets/Bytes passed"""
 
-    PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
-        
     def __init__(self):
         self.table = iptc.Table(iptc.Table.FILTER)
-        self.input_chain = iptc.Chain( )
+        self.input_chain = iptc.Chain()
 
 
 
@@ -32,15 +30,14 @@ def main():
 if __name__ == "__main__":
     sys.exit(main())
 
-# <METRIC> <UNIX_TIMESTAMP> <VALUE>
-# Rules Matched / drops / packets / bytes
 #!/usr/bin/python
 
 import time
 import iptc
 import re
 
-params = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
+INTERVAL = 60
+PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
 
 filter_def_input_accept_pkt = 0
 filter_def_input_accept_byt = 0
@@ -158,12 +155,11 @@ raw_def_prert_drop_pkt = 0
 raw_def_prert_drop_byt = 0
 
 
-for param in params:
+for param in PARAMS:
     table = iptc.Table(param)
+    #table.Refresh()
     for chain in table.chains:
         comments = []
-        pkt = 0
-        byt = 0
         if re.match(r'^NS1', chain.name):
             p = chain.name.split('_')
             chainz = p[0] + '_' + p[1]
@@ -770,15 +766,3 @@ if raw_def_prert_drop_pkt > 0:
     print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpd[0], rdpd[2], 'bytes', int(time.time()), raw_def_prert_drop_byt, rdpd[1])
 else:
     pass
-
-'''
-
-#                print "FilterType: %s\tChain: %10s\tProtocol: %s\tSource: %31s\tDport: %11s\tState: %18s\tTarget: %s\t%s\t%d\t%d" % (str(param).lower(), chainz.lower(), rule.protocol, rule.src, match.dport, match.state, rule_target_name, 'packets', int(time.time()), bytes)
-#                print str(param).lower(), chainz.lower(), rule.protocol, rule.src, match.dport, match.state, rule.dst, rule.in_interface, rule.out_interface, rule_target_name, 'packets', int(time.time()), pkt
-#                if str(chainz).lower() == 'input' and str(rule_target_name).lower() == 'accept':
-#                    print "hai"
-#                elif str(chainz).lower() == 'input' and str(rule_target_name).lower() == 'ns1_input':
-#                    print "ho"
-                print '%s\t%s\t%23s\t%18s\t%15d\t%d' % (str(param).lower(), str(chainz).lower(), str(rule_target_name).lower(), 'packets', int(time.time()), packets)
-                print '%s\t%s\t%23s\t%18s\t%15d\t%d' % (str(param).lower(), str(chainz).lower(), str(rule_target_name).lower(), 'bytes', int(time.time()), bytes)
-'''
