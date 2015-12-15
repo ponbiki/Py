@@ -186,72 +186,90 @@ for param in params:
                 if str(param).lower() == 'filter':
                     if str(chainz).lower() == 'input':
                         if str(rule_tgt_name).lower() == 'accept':
+                            fdia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_input_accept_pkt += packets
                             filter_def_input_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            fdim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_input_mark_pkt += packets
                             filter_def_input_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            fdid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_input_drop_pkt += packets
                             filter_def_input_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'forward':
                         if str(rule_tgt_name).lower() == 'accept':
+                            fdfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_forward_accept_pkt += packets
                             filter_def_forward_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            fdfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_forward_mark_pkt += packets
                             filter_def_forward_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            fdfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_forward_drop_pkt += packets
                             filter_def_forward_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'output':
                         if str(rule_tgt_name).lower() == 'accept':
+                            fdoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_output_accept_pkt += packets
                             filter_def_output_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            fdom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_output_mark_pkt += packets
                             filter_def_output_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            fdod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_def_output_drop_pkt += packets
                             filter_def_output_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'ns1_input':
                         if str(rule_tgt_name).lower() == 'accept':
+                            fnia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_input_accept_pkt += packets
                             filter_ns1_input_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            fnim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_input_mark_pkt += packets
                             filter_ns1_input_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            fnid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_input_drop_pkt += packets
                             filter_ns1_input_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'ns1_forward':
                         if str(rule_tgt_name).lower() == 'accept':
+                            fnfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_forward_accept_pkt += packets
                             filter_ns1_forward_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            fnfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_forward_mark_pkt += packets
                             filter_ns1_forward_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            fnfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_forward_drop_pkt += packets
                             filter_ns1_forward_drop_byt += bytes
                         else:
                             pass
                     elif str(chainz).lower() == 'ns1_output':
                         if str(rule_tgt_name).lower() == 'accept':
+                            fnoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_output_accept_pkt += packets
                             filter_ns1_output_accept_byt += bytes
                         elif str(rule_tgt_name).lower() == 'mark':
+                            fnom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_output_mark_pkt += packets
                             filter_ns1_output_mark_byt += bytes
                         elif str(rule_tgt_name).lower() == 'drop':
+                            fnod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
                             filter_ns1_output_drop_pkt += packets
                             filter_ns1_output_drop_byt += bytes
                         else:
@@ -429,27 +447,20 @@ for param in params:
                 pass
 
 if filter_def_input_accept_pkt > 0:
-    print filter_def_input_accept_pkt
-else:
-    pass
-if filter_def_input_accept_byt > 0:
-    print filter_def_input_accept_byt
+    print fdia[0], fdia[1], fdia[2], 'packets', int(time.time()), filter_def_input_accept_pkt
+    print fdia[0], fdia[1], fdia[2], 'bytes', int(time.time()), filter_def_input_accept_byt
 else:
     pass
 if filter_def_input_mark_pkt > 0:
-    print filter_def_input_mark_pkt
-else:
-    pass
-if filter_def_input_mark_byt > 0:
-    print filter_def_input_mark_byt
+    print fdim[0], fdim[1], fdim[2], 'packets', int(time.time()), filter_def_input_mark_pkt
+    print fdim[0], fdim[1], fdim[2], 'bytes', int(time.time()), filter_def_input_mark_byt
 else:
     pass
 if filter_def_input_drop_pkt > 0:
-    print filter_def_input_drop_pkt
+    print fdid[0], fdid[1], fdid[2], 'packets', int(time.time()), filter_def_input_drop_pkt
+    print fdid[0], fdid[1], fdid[2], 'bytes', int(time.time()), filter_def_input_drop_byt
 else:
     pass
-'''
-if filter_def_input_drop_byt > 0:
 if filter_def_forward_accept_pkt > 0:
 if filter_def_forward_accept_byt > 0:
 if filter_def_forward_mark_pkt > 0:
