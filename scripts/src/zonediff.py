@@ -1,185 +1,644 @@
 #!/usr/bin/python
-# requires python-software-properties, pycurl, and of course *NIX dig
 
-import collections
-import json
-import pycurl
-import re
 import time
-from getpass import getpass
-from subprocess import check_output
-from StringIO import StringIO
+import sys
+import re
+import iptc
 
-API_URI = "https://api.nsone.net/v1/"
-NSONE_NS = "dns1.p01.nsone.net"
-RAND_HOST = "a41be866d9e771d2363d1bb6aa46c5e3"
-AUTH_HEAD = "X-NSONE-Key: "
+INTERVAL = 1
 
+def err(msg):
+  print >>sys.stderr, msg
 
-def curl_api(url, verb, authhead, *args):
-    buffer = StringIO()
-    c = pycurl.Curl()
-    c.setopt(c.URL, url)
-    c.setopt(c.CUSTOMREQUEST, verb)
-    c.setopt(c.HTTPHEADER, [authhead])
-    for arg in args:
-        c.setopt(c.POSTFIELDS, arg)
-    c.setopt(c.WRITEDATA, buffer)
-    c.perform()
-    c.close()
-    return buffer.getvalue()
+def debug(msg):
+  if DEBUG:
+    err(msg)
 
+class IpTabler():
+    """Capture IPTables ststistics: Rules matched, Packets/Bytes dropped, Packets/Bytes passed"""
 
-def ns_get(fqdn):
-    out = check_output(['dig', '+short', fqdn, 'NS'])
-    legacy_ns = out.split()
-    return legacy_ns[0]
+    PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
+        
+    def __init__(self):
+        self.table = iptc.Table(iptc.Table.FILTER)
+        self.input_chain = iptc.Chain( )
 
 
-def record_list(zone_json):
-    zone = json.loads(zone_json)
-    rec_list = []
-    for records in zone['records']:
-        if records['type'] != 'NS':
-            if records['type'] == 'ALIAS':
-                records['type'] == 'A'
-            recs = {
-                'domain': records['domain'],
-                'type': records['type']
-            }
-            rec_list.append(recs)
-    return rec_list
+
+def main():
+    while True:
+        time.sleep(INTERVAL)
+
+if __name__ == "__main__":
+    sys.exit(main())
+
+# <METRIC> <UNIX_TIMESTAMP> <VALUE>
+# Rules Matched / drops / packets / bytes
+#!/usr/bin/python
+
+import time
+import iptc
+import re
+
+params = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
+
+filter_def_input_accept_pkt = 0
+filter_def_input_accept_byt = 0
+filter_def_input_mark_pkt = 0
+filter_def_input_mark_byt = 0
+filter_def_input_drop_pkt = 0
+filter_def_input_drop_byt = 0
+filter_def_forward_accept_pkt = 0
+filter_def_forward_accept_byt = 0
+filter_def_forward_mark_pkt = 0
+filter_def_forward_mark_byt = 0
+filter_def_forward_drop_pkt = 0
+filter_def_forward_drop_byt = 0
+filter_def_output_accept_pkt = 0
+filter_def_output_accept_byt = 0
+filter_def_output_mark_pkt = 0
+filter_def_output_mark_byt = 0
+filter_def_output_drop_pkt = 0
+filter_def_output_drop_byt = 0
+filter_ns1_input_accept_pkt = 0
+filter_ns1_input_accept_byt = 0
+filter_ns1_input_mark_pkt = 0
+filter_ns1_input_mark_byt = 0
+filter_ns1_input_drop_pkt = 0
+filter_ns1_input_drop_byt = 0
+filter_ns1_forward_accept_pkt = 0
+filter_ns1_forward_accept_byt = 0
+filter_ns1_forward_mark_pkt = 0
+filter_ns1_forward_mark_byt = 0
+filter_ns1_forward_drop_pkt = 0
+filter_ns1_forward_drop_byt = 0
+filter_ns1_output_accept_pkt = 0
+filter_ns1_output_accept_byt = 0
+filter_ns1_output_mark_pkt = 0
+filter_ns1_output_mark_byt = 0
+filter_ns1_output_drop_pkt = 0
+filter_ns1_output_drop_byt = 0
+nat_def_input_accept_pkt = 0
+nat_def_input_accept_byt = 0
+nat_def_input_mark_pkt = 0
+nat_def_input_mark_byt = 0
+nat_def_input_drop_pkt = 0
+nat_def_input_drop_byt = 0
+nat_def_output_accept_pkt = 0
+nat_def_output_accept_byt = 0
+nat_def_output_mark_pkt = 0
+nat_def_output_mark_byt = 0
+nat_def_output_drop_pkt = 0
+nat_def_output_drop_byt = 0
+nat_def_prert_accept_pkt = 0
+nat_def_prert_accept_byt = 0
+nat_def_prert_mark_pkt = 0
+nat_def_prert_mark_byt = 0
+nat_def_prert_drop_pkt = 0
+nat_def_prert_drop_byt = 0
+nat_def_postrt_accept_pkt = 0
+nat_def_postrt_accept_byt = 0
+nat_def_postrt_mark_pkt = 0
+nat_def_postrt_mark_byt = 0
+nat_def_postrt_drop_pkt = 0
+nat_def_postrt_drop_byt = 0
+nat_ns1_postrt_accept_pkt = 0
+nat_ns1_postrt_accept_byt = 0
+nat_ns1_postrt_mark_pkt = 0
+nat_ns1_postrt_mark_byt = 0
+nat_ns1_postrt_drop_pkt = 0
+nat_ns1_postrt_drop_byt = 0
+mangle_def_input_accept_pkt = 0
+mangle_def_input_accept_byt = 0
+mangle_def_input_mark_pkt = 0
+mangle_def_input_mark_byt = 0
+mangle_def_input_drop_pkt = 0
+mangle_def_input_drop_byt = 0
+mangle_def_forward_accept_pkt = 0
+mangle_def_forward_accept_byt = 0
+mangle_def_forward_mark_pkt = 0
+mangle_def_forward_mark_byt = 0
+mangle_def_forward_drop_pkt = 0
+mangle_def_forward_drop_byt = 0
+mangle_def_output_accept_pkt = 0
+mangle_def_output_accept_byt = 0
+mangle_def_output_mark_pkt = 0
+mangle_def_output_mark_byt = 0
+mangle_def_output_drop_pkt = 0
+mangle_def_output_drop_byt = 0
+mangle_def_prert_accept_pkt = 0
+mangle_def_prert_accept_byt = 0
+mangle_def_prert_mark_pkt = 0
+mangle_def_prert_mark_byt = 0
+mangle_def_prert_drop_pkt = 0
+mangle_def_prert_drop_byt = 0
+mangle_def_postrt_accept_pkt = 0
+mangle_def_postrt_accept_byt = 0
+mangle_def_postrt_mark_pkt = 0
+mangle_def_postrt_mark_byt = 0
+mangle_def_postrt_drop_pkt = 0
+mangle_def_postrt_drop_byt = 0
+mangle_ns1_postrt_accept_pkt = 0
+mangle_ns1_postrt_accept_byt = 0
+mangle_ns1_postrt_mark_pkt = 0
+mangle_ns1_postrt_mark_byt = 0
+mangle_ns1_postrt_drop_pkt = 0
+mangle_ns1_postrt_drop_byt = 0
+raw_def_output_accept_pkt = 0
+raw_def_output_accept_byt = 0
+raw_def_output_mark_pkt = 0
+raw_def_output_mark_byt = 0
+raw_def_output_drop_pkt = 0
+raw_def_output_drop_byt = 0
+raw_def_prert_accept_pkt = 0
+raw_def_prert_accept_byt = 0
+raw_def_prert_mark_pkt = 0
+raw_def_prert_mark_byt = 0
+raw_def_prert_drop_pkt = 0
+raw_def_prert_drop_byt = 0
 
 
-def lookup(record, type, ns):
-    out = check_output(['dig', '+nocmd', '+noall', '+answer', '+ttlid', type, '@' + ns, record])
-    answers = out.split("\n")
-    answers_list = []
-    for answer in answers:
-        if len(answer) != 0:
-            ans_prts = answer.split("\t")
-            ans_prts[0] = ans_prts[0].lower()
-            answers_list.append("\t".join(ans_prts))
-            answers_list.sort()
-    return answers_list
+for param in params:
+    table = iptc.Table(param)
+    for chain in table.chains:
+        comments = []
+        pkt = 0
+        byt = 0
+        if re.match(r'^NS1', chain.name):
+            p = chain.name.split('_')
+            chainz = p[0] + '_' + p[1]
+        else:
+            chainz = chain.name
+        for rule in chain.rules:
+            if str(rule.target.name).lower() != '':
+                for match in rule.matches:
+                    if match.name == "comment":
+                        comment = match.comment.replace('\s', '_')
+                    else:
+                        comment = "no_comment_" + str(param)
+                match_name = match.name
+                if re.match(r'^NS1', rule.target.name):
+                    p = rule.target.name.split('_')
+                    rule_tgt_name = p[0] + '_' + p[1]
+                else:
+                    rule_tgt_name = rule.target.name
+                (packets, bytes) = rule.get_counters()
+                if str(param).lower() == 'filter':
+                    if str(chainz).lower() == 'input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            filter_def_input_accept_pkt += packets
+                            filter_def_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            filter_def_input_mark_pkt += packets
+                            filter_def_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            filter_def_input_drop_pkt += packets
+                            filter_def_input_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'forward':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            filter_def_forward_accept_pkt += packets
+                            filter_def_forward_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            filter_def_forward_mark_pkt += packets
+                            filter_def_forward_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            filter_def_forward_drop_pkt += packets
+                            filter_def_forward_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            filter_def_output_accept_pkt += packets
+                            filter_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            filter_def_output_mark_pkt += packets
+                            filter_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            filter_def_output_drop_pkt += packets
+                            filter_def_output_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            filter_ns1_input_accept_pkt += packets
+                            filter_ns1_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            filter_ns1_input_mark_pkt += packets
+                            filter_ns1_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            filter_ns1_input_drop_pkt += packets
+                            filter_ns1_input_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_forward':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            filter_ns1_forward_accept_pkt += packets
+                            filter_ns1_forward_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            filter_ns1_forward_mark_pkt += packets
+                            filter_ns1_forward_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            filter_ns1_forward_drop_pkt += packets
+                            filter_ns1_forward_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            filter_ns1_output_accept_pkt += packets
+                            filter_ns1_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            filter_ns1_output_mark_pkt += packets
+                            filter_ns1_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            filter_ns1_output_drop_pkt += packets
+                            filter_ns1_output_drop_byt += bytes
+                        else:
+                            pass
+                    else:
+                        pass
+                elif str(param).lower() == 'nat':
+                    if str(chainz).lower() == 'input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nat_def_input_accept_pkt += packets
+                            nat_def_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nat_def_input_mark_pkt += packets
+                            nat_def_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nat_def_input_drop_pkt += packets
+                            nat_def_input_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nat_def_output_accept_pkt += packets
+                            nat_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nat_def_output_mark_pkt += packets
+                            nat_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nat_def_output_drop_pkt += packets
+                            nat_def_output_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'preroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nat_def_prert_accept_pkt += packets
+                            nat_def_prert_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nat_def_prert_mark_pkt += packets
+                            nat_def_prert_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nat_def_prert_drop_pkt += packets
+                            nat_def_prert_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nat_def_postrt_accept_pkt += packets
+                            nat_def_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nat_def_postrt_mark_pkt += packets
+                            nat_def_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nat_def_postrt_drop_pkt += packets
+                            nat_def_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nat_def_ns1_postrt_accept_pkt += packets
+                            nat_def_ns1_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nat_def_ns1_postrt_mark_pkt += packets
+                            nat_def_ns1_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nat_def_ns1_postrt_drop_pkt += packets
+                            nat_def_ns1_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    else:
+                        pass
+                elif str(param).lower() == 'mangle':
+                    if str(chainz).lower() == 'input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mangle_def_input_accept_pkt += packets
+                            mangle_def_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mangle_def_input_mark_pkt += packets
+                            mangle_def_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mangle_def_input_drop_pkt += packets
+                            mangle_def_input_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'forward':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mangle_def_forward_accept_pkt += packets
+                            mangle_def_forward_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mangle_def_forward_mark_pkt += packets
+                            mangle_def_forward_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mangle_def_forward_drop_pkt += packets
+                            mangle_def_forward_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mangle_def_output_accept_pkt += packets
+                            mangle_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mangle_def_output_mark_pkt += packets
+                            mangle_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mangle_def_output_drop_pkt += packets
+                            mangle_def_output_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'preroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mangle_def_prert_accept_pkt += packets
+                            mangle_def_prert_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mangle_def_prert_mark_pkt += packets
+                            mangle_def_prert_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mangle_def_prert_drop_pkt += packets
+                            mangle_def_prert_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mangle_def_postrt_accept_pkt += packets
+                            mangle_def_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mangle_def_postrt_mark_pkt += packets
+                            mangle_def_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mangle_def_postrt_drop_pkt += packets
+                            mangle_def_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mangle_def_ns1_postrt_accept_pkt += packets
+                            mangle_def_ns1_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mangle_def_ns1_postrt_mark_pkt += packets
+                            mangle_def_ns1_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mangle_def_ns1_postrt_drop_pkt += packets
+                            mangle_def_ns1_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    else:
+                        pass
+                elif string(param).lower() == 'raw':
+                    if str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nat_def_output_accept_pkt += packets
+                            nat_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nat_def_output_mark_pkt += packets
+                            nat_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nat_def_output_drop_pkt += packets
+                            nat_def_output_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'preroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nat_def_prert_accept_pkt += packets
+                            nat_def_prert_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nat_def_prert_mark_pkt += packets
+                            nat_def_prert_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nat_def_prert_drop_pkt += packets
+                            nat_def_prert_drop_byt += bytes
+                        else:
+                            pass
+                    else:
+                        pass
+                else:
+                    pass
+            else:
+                pass
+
+if filter_def_input_accept_pkt > 0:
+    print filter_def_input_accept_pkt
+else:
+    pass
+if filter_def_input_accept_byt > 0:
+    print filter_def_input_accept_byt
+else:
+    pass
+if filter_def_input_mark_pkt > 0:
+    print filter_def_input_mark_pkt
+else:
+    pass
+if filter_def_input_mark_byt > 0:
+    print filter_def_input_mark_byt
+else:
+    pass
+if filter_def_input_drop_pkt > 0:
+    print filter_def_input_drop_pkt
+else:
+    pass
+'''
+if filter_def_input_drop_byt > 0:
+if filter_def_forward_accept_pkt > 0:
+if filter_def_forward_accept_byt > 0:
+if filter_def_forward_mark_pkt > 0:
+if filter_def_forward_mark_byt > 0:
+if filter_def_forward_drop_pkt > 0:
+if filter_def_forward_drop_byt > 0:
+if filter_def_output_accept_pkt > 0:
+if filter_def_output_accept_byt > 0:
+if filter_def_output_mark_pkt > 0:
+if filter_def_output_mark_byt > 0:
+if filter_def_output_drop_pkt > 0:
+if filter_def_output_drop_byt > 0:
+if filter_ns1_input_accept_pkt > 0:
+if filter_ns1_input_accept_byt > 0:
+if filter_ns1_input_mark_pkt > 0:
+if filter_ns1_input_mark_byt > 0:
+if filter_ns1_input_drop_pkt > 0:
+if filter_ns1_input_drop_byt > 0:
+if filter_ns1_forward_accept_pkt > 0:
+if filter_ns1_forward_accept_byt > 0:
+if filter_ns1_forward_mark_pkt > 0:
+if filter_ns1_forward_mark_byt > 0:
+if filter_ns1_forward_drop_pkt > 0:
+if filter_ns1_forward_drop_byt > 0:
+if filter_ns1_output_accept_pkt > 0:
+if filter_ns1_output_accept_byt > 0:
+if filter_ns1_output_mark_pkt > 0:
+if filter_ns1_output_mark_byt > 0:
+if filter_ns1_output_drop_pkt > 0:
+if filter_ns1_output_drop_byt > 0:
+if nat_def_input_accept_pkt > 0:
+if nat_def_input_accept_byt > 0:
+if nat_def_input_mark_pkt > 0:
+if nat_def_input_mark_byt > 0:
+if nat_def_input_drop_pkt > 0:
+if nat_def_input_drop_byt > 0:
+if nat_def_output_accept_pkt > 0:
+if nat_def_output_accept_byt > 0:
+if nat_def_output_mark_pkt > 0:
+if nat_def_output_mark_byt > 0:
+if nat_def_output_drop_pkt > 0:
+if nat_def_output_drop_byt > 0:
+if nat_def_prert_accept_pkt > 0:
+if nat_def_prert_accept_byt > 0:
+if nat_def_prert_mark_pkt > 0:
+if nat_def_prert_mark_byt > 0:
+if nat_def_prert_drop_pkt > 0:
+if nat_def_prert_drop_byt > 0:
+if nat_def_postrt_accept_pkt > 0:
+if nat_def_postrt_accept_byt > 0:
+if nat_def_postrt_mark_pkt > 0:
+if nat_def_postrt_mark_byt > 0:
+if nat_def_postrt_drop_pkt > 0:
+if nat_def_postrt_drop_byt > 0:
+if nat_ns1_postrt_accept_pkt > 0:
+if nat_ns1_postrt_accept_byt > 0:
+if nat_ns1_postrt_mark_pkt > 0:
+if nat_ns1_postrt_mark_byt > 0:
+if nat_ns1_postrt_drop_pkt > 0:
+if nat_ns1_postrt_drop_byt > 0:
+if mangle_def_input_accept_pkt > 0:
+if mangle_def_input_accept_byt > 0:
+if mangle_def_input_mark_pkt > 0:
+if mangle_def_input_mark_byt > 0:
+if mangle_def_input_drop_pkt > 0:
+if mangle_def_input_drop_byt > 0:
+if mangle_def_forward_accept_pkt > 0:
+if mangle_def_forward_accept_byt > 0:
+if mangle_def_forward_mark_pkt > 0:
+if mangle_def_forward_mark_byt > 0:
+if mangle_def_forward_drop_pkt > 0:
+if mangle_def_forward_drop_byt > 0:
+if mangle_def_output_accept_pkt > 0:
+if mangle_def_output_accept_byt > 0:
+if mangle_def_output_mark_pkt > 0:
+if mangle_def_output_mark_byt > 0:
+if mangle_def_output_drop_pkt > 0:
+if mangle_def_output_drop_byt > 0:
+if mangle_def_prert_accept_pkt > 0:
+if mangle_def_prert_accept_byt > 0:
+if mangle_def_prert_mark_pkt > 0:
+if mangle_def_prert_mark_byt > 0:
+if mangle_def_prert_drop_pkt > 0:
+if mangle_def_prert_drop_byt > 0:
+if mangle_def_postrt_accept_pkt > 0:
+if mangle_def_postrt_accept_byt > 0:
+if mangle_def_postrt_mark_pkt > 0:
+if mangle_def_postrt_mark_byt > 0:
+if mangle_def_postrt_drop_pkt > 0:
+if mangle_def_postrt_drop_byt > 0:
+if mangle_ns1_postrt_accept_pkt > 0:
+if mangle_ns1_postrt_accept_byt > 0:
+if mangle_ns1_postrt_mark_pkt > 0:
+if mangle_ns1_postrt_mark_byt > 0:
+if mangle_ns1_postrt_drop_pkt > 0:
+if mangle_ns1_postrt_drop_byt > 0:
+if raw_def_output_accept_pkt > 0:
+if raw_def_output_accept_byt > 0:
+if raw_def_output_mark_pkt > 0:
+if raw_def_output_mark_byt > 0:
+if raw_def_output_drop_pkt > 0:
+if raw_def_output_drop_byt > 0:
+if raw_def_prert_accept_pkt > 0:
+if raw_def_prert_accept_byt > 0:
+if raw_def_prert_mark_pkt > 0:
+if raw_def_prert_mark_byt > 0:
+if raw_def_prert_drop_pkt > 0:
+if raw_def_prert_drop_byt > 0:
+'''
+'''
+params = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
+for param in params:
+    table = iptc.Table(param)
+    print '\n\n\n>>>>>>>>' +  str(param).upper()
+    for chain in table.chains:
+        print "======================="
+        print "Chain ", chain.name
+        for rule in chain.rules:
+            print "Rule", "proto:", rule.protocol, "src:", rule.src, "dst:", \
+                  rule.dst, "in:", rule.in_interface, "out:", rule.out_interface,
+            print "Matches:",
+            for match in rule.matches:
+                print match.name,
+            print "Target:",
+            print rule.target.name
+    print "======================="
 
 
-def diff_rec(record_list):
-    results = []
-    warn = []
-    for record in record_list:
-        if re.match(r"^\*", record['domain']):
-            re.sub(r"\*", RAND_HOST, record['domain'])
-        old_answers = lookup(record['domain'], record['type'], legacy_ns)
-        new_answers = lookup(record['domain'], record['type'], NSONE_NS)
-        diff = lambda x, y: collections.Counter(x) == collections.Counter(y)
-        if not diff(old_answers, new_answers):
-            results.append([record['domain'], record['type'], old_answers, new_answers])
-    for item in results:
-        if len(item) != 0:
-            warn.append(item)
-    return warn
+#                print "FilterType: %s\tChain: %10s\tProtocol: %s\tSource: %31s\tDport: %11s\tState: %18s\tTarget: %s\t%s\t%d\t%d" % (str(param).lower(), chainz.lower(), rule.protocol, rule.src, match.dport, match.state, rule_target_name, 'packets', int(time.time()), bytes)
+#                print str(param).lower(), chainz.lower(), rule.protocol, rule.src, match.dport, match.state, rule.dst, rule.in_interface, rule.out_interface, rule_target_name, 'packets', int(time.time()), pkt
+#                if str(chainz).lower() == 'input' and str(rule_target_name).lower() == 'accept':
+#                    print "hai"
+#                elif str(chainz).lower() == 'input' and str(rule_target_name).lower() == 'ns1_input':
+#                    print "ho"
+                print '%s\t%s\t%23s\t%18s\t%15d\t%d' % (str(param).lower(), str(chainz).lower(), str(rule_target_name).lower(), 'packets', int(time.time()), packets)
+                print '%s\t%s\t%23s\t%18s\t%15d\t%d' % (str(param).lower(), str(chainz).lower(), str(rule_target_name).lower(), 'bytes', int(time.time()), bytes)
+'''
 
+<<<<<<< Upstream, based on origin/master
+=======
+'''
+>>>>>>>>FILTER
+=======================
+Chain  INPUT
+=======================
+Chain  FORWARD
+=======================
+Chain  OUTPUT
+=======================
+Chain  NS1_FORWARD_1449246906
+=======================
+Chain  NS1_INPUT_1449246906
+=======================
+Chain  NS1_OUTPUT_1449246906
+=======================
 
-def key_check(key):
-    if re.match(r"^[a-zA-Z\d]+$", key):
-        api_kck_uri = API_URI + "zones/"
-        if json.loads(curl_api(api_kck_uri, "GET", AUTH_HEAD + key)) == {'message': 'Unauthorized'}:
-            print("\nSorry, that key is not valid!")
-            return 1
-    else:
-        print("\nSorry, your key is not in the correct format!")
-        return 1
+>>>>>>>>NAT
+=======================
+Chain  PREROUTING
+=======================
+Chain  INPUT
+=======================
+Chain  OUTPUT
+=======================
+Chain  POSTROUTING
+=======================
+Chain  NS1_POSTROUTING_1449246906
+=======================
 
+>>>>>>>>MANGLE
+=======================
+Chain  PREROUTING
+=======================
+Chain  INPUT
+=======================
+Chain  FORWARD
+=======================
+Chain  OUTPUT
+=======================
+Chain  POSTROUTING
+=======================
+Chain  NS1_PREROUTING_1449246906
+=======================
 
-def zone_check(api_key, domain):
-    if len(domain) > 255:
-        print("\nDomain name is too long!")
-        return 1
-    if re.match(r"[a-zA-Z\d-]{,63}(\.[a-zA-Z\d-]{,63})+[a-zA-Z\d]{2,5}$", domain):
-        api_dck_uri = API_URI + "zones/" + domain
-        if json.loads(curl_api(api_dck_uri, "GET", AUTH_HEAD + api_key)) == {'message': "zone not found"}:
-            print("\nSorry, " + domain + " is not associated with this API key!")
-            return 1
-    else:
-        print("\nSorry, " + domain + " is not a valid domain name!")
-        return 1
+>>>>>>>>RAW
+=======================
+Chain  PREROUTING
+=======================
+Chain  OUTPUT
+=======================
 
-
-def presenter(warn_list):
-    item = ''
-    i = 0
-    for oops in warn_list:
-        i += 1
-        item += "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n"
-        item += str(i)
-        ouch = oops[0].split(".")
-        if ouch[0] == RAND_HOST:
-            ouch[0] = "*"
-        oops[0] = '.'.join(ouch)
-        item += ") There may be a difference in domain " + oops[0] + " record type " + oops[1] + "\n"
-        item += "!!Please double check the Answer(s), TTL, and record type!!\n"
-        item += "\n>>>> " + legacy_ns + " answers:\n"
-        for answer in oops[2]:
-            item += answer + "\n"
-        item += "\n>>>> " + NSONE_NS + " answers:\n"
-        for answer in oops[3]:
-            item += answer + "\n"
-    return item
-
-
-def save_file(domain, text):
-    thyme = str(time.time()).split('.', 1)[0]
-    f_name = "zone_test_" + domain + "_" + thyme + ".txt"
-    try:
-        file = open(f_name, 'w')
-        file.write(text)
-        file.close()
-        good = "\n-----> " + f_name + " was written successfully!"
-        return good
-    except:
-        bad = "\nThere was a problem writing to " + check_output(['pwd']).rstrip()
-        return bad
-
-
-def try_another(maybe):
-    if maybe.lower()[:1] == 'n':
-        return 1
-
-
-def banner():
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    print('+---------------------------------------------------------------+')
-    print('+------------------Zone_Consistancy_Checker_v1------------------+')
-    print('+---------------------------------------------------------------+')
-    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-
-banner()
-print("\nPlease enter API key:")
-api_key = getpass(prompt="").strip()
-while key_check(api_key) == 1:
-    print("\nPlease try your API key again:")
-    api_key = getpass(prompt="").strip()
-maybe = 'y'
-while try_another(maybe) != 1:
-    print("\nPlease enter fully qualified domain name:")
-    fqdn = raw_input().strip()
-    while zone_check(api_key, fqdn) == 1:
-        print("\nPlease try entering your domain again:")
-        fqdn = raw_input().strip()
-    legacy_ns = ns_get(fqdn)
-    results = (presenter(diff_rec(record_list(curl_api(API_URI + "zones/" + fqdn, "GET", AUTH_HEAD + api_key)))))
-    print(results)
-    if len(results) > 0:
-        print("\nWould you like a text copy in " + check_output(['pwd']).rstrip() + "? ( Y/n )")
-        txt_me = raw_input().strip()
-        if txt_me.lower()[:1] == 'y':
-            print(save_file(fqdn, results))
-    else:
-        print("\nThe records in the " + fqdn + " zone match on the current and NS1 nameservers.")
-    print("\nDo you want to test another domain? ( Y/n ):")
-    maybe = raw_input().strip()
-
-# todo
-# add SOA comparison
-# gracefully handle domain with no legacy NS
+'''
