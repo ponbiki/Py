@@ -157,7 +157,6 @@ raw_def_prert_drop_byt = 0
 
 for param in PARAMS:
     table = iptc.Table(param)
-    #table.Refresh()
     for chain in table.chains:
         comments = []
         if re.match(r'^NS1', chain.name):
