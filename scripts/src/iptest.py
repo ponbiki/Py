@@ -588,3 +588,57 @@ for param in params:
                 print '%s\t%s\t%23s\t%18s\t%15d\t%d' % (str(param).lower(), str(chainz).lower(), str(rule_target_name).lower(), 'bytes', int(time.time()), bytes)
 '''
 
+<<<<<<< Upstream, based on origin/master
+=======
+'''
+>>>>>>>>FILTER
+=======================
+Chain  INPUT
+=======================
+Chain  FORWARD
+=======================
+Chain  OUTPUT
+=======================
+Chain  NS1_FORWARD_1449246906
+=======================
+Chain  NS1_INPUT_1449246906
+=======================
+Chain  NS1_OUTPUT_1449246906
+=======================
+
+>>>>>>>>NAT
+=======================
+Chain  PREROUTING
+=======================
+Chain  INPUT
+=======================
+Chain  OUTPUT
+=======================
+Chain  POSTROUTING
+=======================
+Chain  NS1_POSTROUTING_1449246906
+=======================
+
+>>>>>>>>MANGLE
+=======================
+Chain  PREROUTING
+=======================
+Chain  INPUT
+=======================
+Chain  FORWARD
+=======================
+Chain  OUTPUT
+=======================
+Chain  POSTROUTING
+=======================
+Chain  NS1_PREROUTING_1449246906
+=======================
+
+>>>>>>>>RAW
+=======================
+Chain  PREROUTING
+=======================
+Chain  OUTPUT
+=======================
+
+'''
