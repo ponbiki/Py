@@ -21,6 +21,7 @@ import re
 import sys
 
 INTERVAL = 60
+ZERO_COUNT = True
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
 
 def collect_metrics():
@@ -158,8 +159,8 @@ def collect_metrics():
                 for match in rule.matches:
                     if match.name == 'comment':
                         cmnt =  re.sub(r'\s', '_', match.parameters["comment"])
-                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, comment))
-                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, comment))
+                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, cmnt))
+                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, cmnt))
                     else:
                         pass
                 if str(param).lower() == 'filter':
@@ -461,6 +462,10 @@ def collect_metrics():
                         pass
                 else:
                     pass
+            if ZERO_COUNT == True:
+                chain.zero_counters()
+            else:
+                pass
 
     if filter_def_input_accept_pkt > 0:
         print 'iptables.%s.%s.%s %d %d chain=%s' % (fdia[0], fdia[2], 'packets', int(time.time()), filter_def_input_accept_pkt, fdia[1])
@@ -749,6 +754,7 @@ def collect_metrics():
         pass
     for cmnt in comments:
         print cmnt
+    comments[:] = []
 
 def main():
     while True:
