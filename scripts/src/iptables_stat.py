@@ -159,11 +159,8 @@ def collect_metrics():
                 for match in rule.matches:
                     if match.name == 'comment':
                         cmnt = re.sub(r'\s', '_', match.parameters["comment"])
-                        if packets > 0:
-                            comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, cmnt))
-                            comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, cmnt))
-                        else:
-                            pass
+                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, cmnt))
+                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, cmnt))
                     else:
                         pass
                 if str(param).lower() == 'filter':
