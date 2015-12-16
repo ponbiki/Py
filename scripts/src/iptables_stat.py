@@ -149,314 +149,319 @@ def collect_metrics():
             else:
                 chainz = chain.name
             for rule in chain.rules:
-                if str(rule.target.name).lower() != '':
-                    if re.match(r'^NS1', rule.target.name):
-                        p = rule.target.name.split('_')
-                        rule_tgt_name = p[0] + '_' + p[1]
+                if re.match(r'^NS1', rule.target.name):
+                    p = rule.target.name.split('_')
+                    rule_tgt_name = p[0] + '_' + p[1]
+                else:
+                    rule_tgt_name = rule.target.name
+                (packets, bytes) = rule.get_counters()
+                for match in rule.matches:
+                    if match.name == 'comment':
+                        cmnt =  re.sub(r'\s', '_', match.parameters["comment"])
+                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, comment))
+                        comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, comment))
                     else:
-                        rule_tgt_name = rule.target.name
-                    (packets, bytes) = rule.get_counters()
-                    if str(param).lower() == 'filter':
-                        if str(chainz).lower() == 'input':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                fdia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_input_accept_pkt += packets
-                                filter_def_input_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                fdim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_input_mark_pkt += packets
-                                filter_def_input_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                fdid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_input_drop_pkt += packets
-                                filter_def_input_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'forward':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                fdfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_forward_accept_pkt += packets
-                                filter_def_forward_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                fdfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_forward_mark_pkt += packets
-                                filter_def_forward_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                fdfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_forward_drop_pkt += packets
-                                filter_def_forward_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'output':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                fdoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_output_accept_pkt += packets
-                                filter_def_output_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                fdom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_output_mark_pkt += packets
-                                filter_def_output_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                fdod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_def_output_drop_pkt += packets
-                                filter_def_output_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'ns1_input':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                fnia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_input_accept_pkt += packets
-                                filter_ns1_input_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                fnim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_input_mark_pkt += packets
-                                filter_ns1_input_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                fnid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_input_drop_pkt += packets
-                                filter_ns1_input_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'ns1_forward':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                fnfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_forward_accept_pkt += packets
-                                filter_ns1_forward_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                fnfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_forward_mark_pkt += packets
-                                filter_ns1_forward_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                fnfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_forward_drop_pkt += packets
-                                filter_ns1_forward_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'ns1_output':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                fnoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_output_accept_pkt += packets
-                                filter_ns1_output_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                fnom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_output_mark_pkt += packets
-                                filter_ns1_output_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                fnod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                filter_ns1_output_drop_pkt += packets
-                                filter_ns1_output_drop_byt += bytes
-                            else:
-                                pass
+                        pass
+                if str(param).lower() == 'filter':
+                    if str(chainz).lower() == 'input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            fdia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_input_accept_pkt += packets
+                            filter_def_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            fdim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_input_mark_pkt += packets
+                            filter_def_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            fdid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_input_drop_pkt += packets
+                            filter_def_input_drop_byt += bytes
                         else:
                             pass
-                    elif str(param).lower() == 'nat':
-                        if str(chainz).lower() == 'input':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                ndia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_input_accept_pkt += packets
-                                nat_def_input_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                ndim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_input_mark_pkt += packets
-                                nat_def_input_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                ndid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_input_drop_pkt += packets
-                                nat_def_input_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'output':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                ndoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_output_accept_pkt += packets
-                                nat_def_output_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                ndom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_output_mark_pkt += packets
-                                nat_def_output_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                ndod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_output_drop_pkt += packets
-                                nat_def_output_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'preroute':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                ndpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_prert_accept_pkt += packets
-                                nat_def_prert_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                ndpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_prert_mark_pkt += packets
-                                nat_def_prert_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                ndpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_prert_drop_pkt += packets
-                                nat_def_prert_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'postroute':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                ndPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_postrt_accept_pkt += packets
-                                nat_def_postrt_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                ndPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_postrt_mark_pkt += packets
-                                nat_def_postrt_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                ndPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_postrt_drop_pkt += packets
-                                nat_def_postrt_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'ns1_postroute':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                nnPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_ns1_postrt_accept_pkt += packets
-                                nat_ns1_postrt_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                nnPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_ns1_postrt_mark_pkt += packets
-                                nat_ns1_postrt_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                nnPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_ns1_postrt_drop_pkt += packets
-                                nat_ns1_postrt_drop_byt += bytes
-                            else:
-                                pass
+                    elif str(chainz).lower() == 'forward':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            fdfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_forward_accept_pkt += packets
+                            filter_def_forward_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            fdfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_forward_mark_pkt += packets
+                            filter_def_forward_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            fdfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_forward_drop_pkt += packets
+                            filter_def_forward_drop_byt += bytes
                         else:
                             pass
-                    elif str(param).lower() == 'mangle':
-                        if str(chainz).lower() == 'input':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                mdia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_input_accept_pkt += packets
-                                mangle_def_input_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                mdim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_input_mark_pkt += packets
-                                mangle_def_input_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                mdid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_input_drop_pkt += packets
-                                mangle_def_input_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'forward':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                mdfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_forward_accept_pkt += packets
-                                mangle_def_forward_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                mdfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_forward_mark_pkt += packets
-                                mangle_def_forward_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                mdfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_forward_drop_pkt += packets
-                                mangle_def_forward_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'output':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                mdoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_output_accept_pkt += packets
-                                mangle_def_output_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                mdom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_output_mark_pkt += packets
-                                mangle_def_output_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                mdod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_output_drop_pkt += packets
-                                mangle_def_output_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'preroute':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                mdpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_prert_accept_pkt += packets
-                                mangle_def_prert_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                mdpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_prert_mark_pkt += packets
-                                mangle_def_prert_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                mdpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_prert_drop_pkt += packets
-                                mangle_def_prert_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'postroute':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                mdPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_postrt_accept_pkt += packets
-                                mangle_def_postrt_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                mdPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_postrt_mark_pkt += packets
-                                mangle_def_postrt_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                mdPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_def_postrt_drop_pkt += packets
-                                mangle_def_postrt_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'ns1_postroute':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                mnPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_ns1_postrt_accept_pkt += packets
-                                mangle_ns1_postrt_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                mnPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_ns1_postrt_mark_pkt += packets
-                                mangle_ns1_postrt_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                mnPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                mangle_ns1_postrt_drop_pkt += packets
-                                mangle_ns1_postrt_drop_byt += bytes
-                            else:
-                                pass
+                    elif str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            fdoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_output_accept_pkt += packets
+                            filter_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            fdom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_output_mark_pkt += packets
+                            filter_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            fdod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_def_output_drop_pkt += packets
+                            filter_def_output_drop_byt += bytes
                         else:
                             pass
-                    elif string(param).lower() == 'raw':
-                        if str(chainz).lower() == 'output':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                ndoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_output_accept_pkt += packets
-                                nat_def_output_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                ndom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_output_mark_pkt += packets
-                                nat_def_output_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                ndod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_output_drop_pkt += packets
-                                nat_def_output_drop_byt += bytes
-                            else:
-                                pass
-                        elif str(chainz).lower() == 'preroute':
-                            if str(rule_tgt_name).lower() == 'accept':
-                                ndpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_prert_accept_pkt += packets
-                                nat_def_prert_accept_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'mark':
-                                ndpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_prert_mark_pkt += packets
-                                nat_def_prert_mark_byt += bytes
-                            elif str(rule_tgt_name).lower() == 'drop':
-                                ndpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
-                                nat_def_prert_drop_pkt += packets
-                                nat_def_prert_drop_byt += bytes
-                            else:
-                                pass
+                    elif str(chainz).lower() == 'ns1_input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            fnia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_input_accept_pkt += packets
+                            filter_ns1_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            fnim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_input_mark_pkt += packets
+                            filter_ns1_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            fnid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_input_drop_pkt += packets
+                            filter_ns1_input_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_forward':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            fnfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_forward_accept_pkt += packets
+                            filter_ns1_forward_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            fnfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_forward_mark_pkt += packets
+                            filter_ns1_forward_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            fnfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_forward_drop_pkt += packets
+                            filter_ns1_forward_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            fnoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_output_accept_pkt += packets
+                            filter_ns1_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            fnom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_output_mark_pkt += packets
+                            filter_ns1_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            fnod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            filter_ns1_output_drop_pkt += packets
+                            filter_ns1_output_drop_byt += bytes
+                        else:
+                            pass
+                    else:
+                        pass
+                elif str(param).lower() == 'nat':
+                    if str(chainz).lower() == 'input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            ndia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_input_accept_pkt += packets
+                            nat_def_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            ndim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_input_mark_pkt += packets
+                            nat_def_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            ndid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_input_drop_pkt += packets
+                            nat_def_input_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            ndoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_output_accept_pkt += packets
+                            nat_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            ndom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_output_mark_pkt += packets
+                            nat_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            ndod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_output_drop_pkt += packets
+                            nat_def_output_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'preroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            ndpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_prert_accept_pkt += packets
+                            nat_def_prert_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            ndpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_prert_mark_pkt += packets
+                            nat_def_prert_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            ndpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_prert_drop_pkt += packets
+                            nat_def_prert_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            ndPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_postrt_accept_pkt += packets
+                            nat_def_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            ndPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_postrt_mark_pkt += packets
+                            nat_def_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            ndPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_postrt_drop_pkt += packets
+                            nat_def_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            nnPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_ns1_postrt_accept_pkt += packets
+                            nat_ns1_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            nnPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_ns1_postrt_mark_pkt += packets
+                            nat_ns1_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            nnPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_ns1_postrt_drop_pkt += packets
+                            nat_ns1_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    else:
+                        pass
+                elif str(param).lower() == 'mangle':
+                    if str(chainz).lower() == 'input':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mdia = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_input_accept_pkt += packets
+                            mangle_def_input_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mdim = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_input_mark_pkt += packets
+                            mangle_def_input_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mdid = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_input_drop_pkt += packets
+                            mangle_def_input_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'forward':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mdfa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_forward_accept_pkt += packets
+                            mangle_def_forward_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mdfm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_forward_mark_pkt += packets
+                            mangle_def_forward_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mdfd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_forward_drop_pkt += packets
+                            mangle_def_forward_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mdoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_output_accept_pkt += packets
+                            mangle_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mdom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_output_mark_pkt += packets
+                            mangle_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mdod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_output_drop_pkt += packets
+                            mangle_def_output_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'preroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mdpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_prert_accept_pkt += packets
+                            mangle_def_prert_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mdpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_prert_mark_pkt += packets
+                            mangle_def_prert_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mdpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_prert_drop_pkt += packets
+                            mangle_def_prert_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mdPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_postrt_accept_pkt += packets
+                            mangle_def_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mdPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_postrt_mark_pkt += packets
+                            mangle_def_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mdPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_def_postrt_drop_pkt += packets
+                            mangle_def_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'ns1_postroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            mnPa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_ns1_postrt_accept_pkt += packets
+                            mangle_ns1_postrt_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            mnPm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_ns1_postrt_mark_pkt += packets
+                            mangle_ns1_postrt_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            mnPd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            mangle_ns1_postrt_drop_pkt += packets
+                            mangle_ns1_postrt_drop_byt += bytes
+                        else:
+                            pass
+                    else:
+                        pass
+                elif string(param).lower() == 'raw':
+                    if str(chainz).lower() == 'output':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            ndoa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_output_accept_pkt += packets
+                            nat_def_output_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            ndom = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_output_mark_pkt += packets
+                            nat_def_output_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            ndod = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_output_drop_pkt += packets
+                            nat_def_output_drop_byt += bytes
+                        else:
+                            pass
+                    elif str(chainz).lower() == 'preroute':
+                        if str(rule_tgt_name).lower() == 'accept':
+                            ndpa = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_prert_accept_pkt += packets
+                            nat_def_prert_accept_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'mark':
+                            ndpm = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_prert_mark_pkt += packets
+                            nat_def_prert_mark_byt += bytes
+                        elif str(rule_tgt_name).lower() == 'drop':
+                            ndpd = [str(param).lower(), str(chainz).lower(), str(rule_tgt_name).lower()]
+                            nat_def_prert_drop_pkt += packets
+                            nat_def_prert_drop_byt += bytes
                         else:
                             pass
                     else:
                         pass
                 else:
                     pass
+
     if filter_def_input_accept_pkt > 0:
         print 'iptables.%s.%s.%s %d %d chain=%s' % (fdia[0], fdia[2], 'packets', int(time.time()), filter_def_input_accept_pkt, fdia[1])
         print 'iptables.%s.%s.%s %d %d chain=%s' % (fdia[0], fdia[2], 'bytes', int(time.time()), filter_def_input_accept_byt, fdia[1])
@@ -756,13 +761,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-    
-'''
-if match_name == 'comment':
-comment = match.comment.replace(' ', '_')
-comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, comment))
-comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, comment))
-
-iptables.<table>.<action>.<bytes|pkts> [chain=XXX]
-iptables.<table>.rules.<bytes|pkts> [rule=XXX]
-'''
