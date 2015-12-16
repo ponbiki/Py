@@ -138,11 +138,11 @@ def collect_metrics():
     raw_def_prert_mark_byt = 0
     raw_def_prert_drop_pkt = 0
     raw_def_prert_drop_byt = 0
+    comments = []
     for param in PARAMS:
         table = iptc.Table(param)
         table.refresh()
         for chain in table.chains:
-            comments = []
             if re.match(r'^NS1', chain.name):
                 p = chain.name.split('_')
                 chainz = p[0] + '_' + p[1]
@@ -150,12 +150,6 @@ def collect_metrics():
                 chainz = chain.name
             for rule in chain.rules:
                 if str(rule.target.name).lower() != '':
-                    for match in rule.matches:
-                        if match.name == "comment":
-                            comment = match.comment.replace('\s', '_')
-                        else:
-                            comment = "no_comment_" + str(param)
-                    match_name = match.name
                     if re.match(r'^NS1', rule.target.name):
                         p = rule.target.name.split('_')
                         rule_tgt_name = p[0] + '_' + p[1]
@@ -463,7 +457,6 @@ def collect_metrics():
                         pass
                 else:
                     pass
-
     if filter_def_input_accept_pkt > 0:
         print 'iptables.%s.%s.%s %d %d chain=%s' % (fdia[0], fdia[2], 'packets', int(time.time()), filter_def_input_accept_pkt, fdia[1])
         print 'iptables.%s.%s.%s %d %d chain=%s' % (fdia[0], fdia[2], 'bytes', int(time.time()), filter_def_input_accept_byt, fdia[1])
@@ -749,6 +742,8 @@ def collect_metrics():
         print 'iptables.%s.%s.%s %d %d chain=%s' % (rdpd[0], rdpd[2], 'bytes', int(time.time()), raw_def_prert_drop_byt, rdpd[1])
     else:
         pass
+    for cmnt in comments:
+        print cmnt
 
 def main():
     while True:
@@ -761,3 +756,13 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+    
+'''
+if match_name == 'comment':
+comment = match.comment.replace(' ', '_')
+comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, comment))
+comments.append('iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, comment))
+
+iptables.<table>.<action>.<bytes|pkts> [chain=XXX]
+iptables.<table>.rules.<bytes|pkts> [rule=XXX]
+'''
