@@ -24,8 +24,8 @@ INTERVAL = 60
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
 
 def collect_metrics():
-    thyme = int(time.time())
     for param in PARAMS:
+        thyme = int(time.time())
         table = iptc.Table(param)
         table.refresh()
         for chain in table.chains:
