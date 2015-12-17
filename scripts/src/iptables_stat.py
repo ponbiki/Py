@@ -29,6 +29,12 @@ def collect_metrics():
         table = iptc.Table(param)
         table.refresh()
         for chain in table.chains:
+            pkt_accept_count = 0
+            byt_accept_count = 0
+            pkt_mark_count = 0
+            byt_mark_count = 0
+            pkt_drop_count = 0
+            byt_drop_count = 0
             if re.match(r'^NS1', chain.name):
                 p = chain.name.split('_')
                 chainz = str(p[0] + '_' + p[1]).lower()
@@ -41,21 +47,38 @@ def collect_metrics():
                 else:
                     rule_tgt_name = str(rule.target.name).lower()
                 (packets, bytes) = rule.get_counters()
-                if rule_tgt_name == 'accept' or rule_tgt_name == 'mark' or rule_tgt_name == 'drop':
-                    print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), rule_tgt_name, 'packets', thyme, packets, chainz)
-                    print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), rule_tgt_name, 'bytes', thyme, bytes, chainz)
-                    for match in rule.matches:
-                        if match.name == 'comment':
-                            if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
-                                cmntA = re.sub(r'^tcollector:', '', match.parameters["comment"], re.IGNORECASE)
-                                cmnt = re.sub(r'\s', '_', cmntA)
-                                print 'iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', int(time.time()), packets, cmnt)
-                                print 'iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', int(time.time()), bytes, cmnt)
-                            else:
-                                pass
+                if rule_tgt_name == 'accept':
+                    pkt_accept_count += packets
+                    byt_accept_count += bytes
+                else:
+                    pass
+                if rule_tgt_name == 'mark':
+                    pkt_mark_count += packets
+                    byt_mark_count += bytes
+                else:
+                    pass
+                if rule_tgt_name == 'drop':
+                    pkt_drop_count += packets
+                    byt_drop_count += bytes
+                else:
+                    pass
+                for match in rule.matches:
+                    if match.name == 'comment':
+                        if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
+                            cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
+                            print 'iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'packets', thyme, packets, cmnt)
+                            print 'iptables.%s.rules.%s %d %d rule=%s' % (str(param).lower(), 'bytes', thyme, bytes, cmnt)
                         else:
                             pass
-            chain.zero_counters()
+                    else:
+                        pass
+            print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'accept', 'packets', thyme, pkt_accept_count, chainz)
+            print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'accept', 'bytes', thyme, byt_accept_count, chainz)
+            print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'mark', 'packets', thyme, pkt_mark_count, chainz)
+            print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainz)
+            print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainz)
+            print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz)
+        chain.zero_counters()
 
 def main():
     while True:
