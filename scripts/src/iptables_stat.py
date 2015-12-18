@@ -24,6 +24,19 @@ INTERVAL = 60
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
 
 def collect_metrics():
+        '''
+    Using python-iptables, this steps recursively through each table->chain->rule
+    It aggregates the packet and byte counts for each rule in a chain that hits an
+    accept, mark, or drop rule, and then returns the data for each one in the format of:
+    
+    iptables.<table>.<accept|mark|drop>.<packets|bytes> <timestamp> <cnt> chain=<chain>
+    
+    There is also a per rule recursion that returns the packet and byte counts for 
+    any rule containing a comment beginning with "tcollector:" and returns the
+    data for each matched rule in the format of:
+    
+    iptables.<table>.rules.<packets|bytes> <timestamp> <cnt> rule=<rule_marker>
+    '''
     for param in PARAMS:
         thyme = int(time.time())
         table = iptc.Table(param)
