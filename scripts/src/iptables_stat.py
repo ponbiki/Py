@@ -78,7 +78,7 @@ def collect_metrics():
             print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainz)
             print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainz)
             print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz)
-        chain.zero_counters()
+            chain.zero_counters()
 
 def main():
     while True:
