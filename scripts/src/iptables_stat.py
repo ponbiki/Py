@@ -20,7 +20,7 @@ import iptc
 import re
 import sys
 
-INTERVAL = 60
+INTERVAL = 30
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
 
 def collect_metrics():
