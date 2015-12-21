@@ -24,7 +24,7 @@ INTERVAL = 30
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
 
 def collect_metrics():
-        '''
+    '''
     Using python-iptables, this steps recursively through each table->chain->rule
     It aggregates the packet and byte counts for each rule in a chain that hits an
     accept, mark, or drop rule, and then returns the data for each one in the format of:
