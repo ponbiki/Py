@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# iptables_stat.py -- a collector for tcollector/OpenTSDB
+# bgp_status.py -- a collector for tcollector/OpenTSDB
 # Copyright (C) 2015 NSONE, Inc.
 #
 # This program is free software: you can redistribute it and/or modify it
@@ -27,7 +27,6 @@ BGP_CONF = '/etc/nsone/bgp.conf'
 BGP_UP = 'bgp-up.conf'
 PUERTO = 179
 
-AD = "-"
 AF_INET6 = getattr(socket, 'AF_INET6', object())
 proto_map = {
     (AF_INET, SOCK_STREAM): 'tcp',
