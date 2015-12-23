@@ -19,19 +19,11 @@ import sys
 import time
 import os
 import psutil
-import socket
-from socket import AF_INET, SOCK_STREAM
 
 INTERVAL = 30
 BGP_CONF = '/etc/nsone/bgp.conf'
 BGP_UP = 'bgp-up.conf'
 PUERTO = 179
-
-AF_INET6 = getattr(socket, 'AF_INET6', object())
-proto_map = {
-    (AF_INET, SOCK_STREAM): 'tcp',
-    (AF_INET6, SOCK_STREAM): 'tcp6'
-}
 
 def check_BGP():
     '''
