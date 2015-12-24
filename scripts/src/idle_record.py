@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import time
 import json
 import pycurl
 import sys
@@ -37,8 +38,9 @@ for zone in zone_list:
     thing = {zone: []}
     z = json.loads(record)
     for r in z['records']:
+        time.sleep(1)
         stats = json.loads(curl_api(URL + 'stats/usage/' + zone + '/' + r['domain'] + '/' + r['type'] + '?period=30d', 'GET', AUTH))
         if stats[0]['queries'] == 0:
             print 'Zone: %30s ||| Record: %30s ||| Type: %7s\n' % (zone, r['domain'], r['type'])
         else:
-            continue
+            pass
