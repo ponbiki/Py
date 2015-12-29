@@ -1,9 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 import json
 import pycurl
 import sys
 from StringIO import StringIO
+
+'''
+simple zone/record backups called with api key following, and outputs json
+does not grab monitors, feeds, etc
+'''
 
 AUTH = 'X-NSONE-Key: ' + sys.argv[1]
 URL = 'https://api.nsone.net/v1/zones'
