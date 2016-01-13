@@ -6,6 +6,10 @@ import pycurl
 import sys
 from StringIO import StringIO
 
+'''
+call program followed by api key to find all domains idle for the last 30d
+'''
+
 AUTH = 'X-NSONE-Key: ' + sys.argv[1]
 URL = 'https://api.nsone.net/v1/'
 
