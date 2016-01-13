@@ -29,7 +29,7 @@ def check_BGP():
     '''
     Checks bgp.conf for up / down, and the sockets for v4 and v6 BGP established.
     Returns in the format of:
-    bgp.status <time> <0|1> protocol=<v4|v6>
+    bgp.status <time> <0|1> protocol=<IPv4|IPv6>
     '''
     thyme = int(time.time())
     v6_up = 0
