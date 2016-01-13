@@ -69,3 +69,4 @@ elif sys.argv[2] == 'c':
                 print "%s, %s, %s, %s, %s" % (y, x['domain'], x['type'], str(x['ttl']), w)
 else:
    print('Unrecognized option: ' + sys.argv[2])
+
