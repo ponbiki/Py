@@ -60,5 +60,11 @@ elif sys.argv[2] == 'p':
          for w in x['answers']:
             print('    Answer:   ' + w)
          print('\n')
+elif sys.argv[2] == 'c':
+    print "zone, record, type, ttl, answer\n"
+    for y in zone_list:
+        for x in big_dic[y]:
+            for w in x['answers']:
+                print "%s, %s, %s, %s, %s" % (y, x['domain'], x['type'], str(x['ttl']), w)
 else:
    print('Unrecognized option: ' + sys.argv[2])
