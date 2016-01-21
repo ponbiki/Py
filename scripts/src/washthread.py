@@ -1,4 +1,5 @@
-import threading, queue
+import threading
+import queue
 import time
 
 def washer(dishes, dish_queue):
