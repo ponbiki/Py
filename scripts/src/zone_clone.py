@@ -12,6 +12,10 @@ simple zone/record backups called with api key following, and outputs json
 
 AUTH = 'X-NSONE-Key: ' + sys.argv[1]
 URL = 'https://api.nsone.net/v1/zones'
+OLD_ZONE = sys.argv[2]
+NEW_ZONE = sys.argv[3]
+if len(sys.argv) > 4:
+    AUTH2 = "X-NSONE-Key: " + sys.argv[4]
 
 
 def curl_api(url, verb, authhead, *args):
@@ -27,7 +31,8 @@ def curl_api(url, verb, authhead, *args):
     c.close()
     return buffer.getvalue()
 
-zone_arg = URL + "/" + sys.argv[2]
+
+zone_arg = URL + "/" + OLD_ZONE
 jsons = json.loads(curl_api(zone_arg, 'GET', AUTH))
 domain_list = []
 new_domain_list = []
@@ -35,21 +40,40 @@ new_domain_list = []
 for x in jsons['records']:
     if x['type'] != "NS":
         domain_list.append([x['domain'], x['type']])
-        x['domain'] = x['domain'].replace(sys.argv[2], sys.argv[3])
+        x['domain'] = x['domain'].replace(OLD_ZONE, NEW_ZONE)
         new_domain_list.append([x['domain'], x['type']])
+
+stripped_records = []
 
 for y in domain_list:
     time.sleep(.75)
-    record_arg = URL + "/" + sys.argv[2] + "/" + y[0] + "/" + y[1]
+    record_arg = URL + "/" + OLD_ZONE + "/" + y[0] + "/" + y[1]
     temp_record = (json.loads(curl_api(record_arg, "GET", AUTH)))
-    temp_record['domain'] = temp_record['domain'].replace(sys.argv[2], sys.argv[3])
-    temp_record['zone'] = temp_record['zone'].replace(sys.argv[2], sys.argv[3])
-    clone_arg = URL + "/" + sys.argv[3] + "/" + temp_record['domain'] + "/" + temp_record['type']
+    temp_record['domain'] = temp_record['domain'].replace(OLD_ZONE, NEW_ZONE)
+    temp_record['zone'] = temp_record['zone'].replace(OLD_ZONE, NEW_ZONE)
+    clone_arg = URL + "/" + NEW_ZONE + "/" + temp_record['domain'] + "/" + temp_record['type']
     jzonz = json.dumps(temp_record)
-    message = json.dumps(curl_api(clone_arg, "PUT", AUTH, jzonz))
+    if len(sys.argv) > 4:
+        key = AUTH2
+    else:
+        key = AUTH
+    message = json.dumps(curl_api(clone_arg, "PUT", key, jzonz))
     print(message)
     if "Rate limit" in message:
         time.sleep(3)
-        message = json.dumps(curl_api(clone_arg, "PUT", AUTH, jzonz))
+        message = json.dumps(curl_api(clone_arg, "PUT", key, jzonz))
         print(message)
+    if "unknown feed id" in message:
+        stripped_records.append(temp_record['domain'])
+        answer_count = 0
+        for z in temp_record['answers']:
+            temp_record['answers'][answer_count]['feeds'] = []
+            temp_record['answers'][answer_count]['meta'] = {}
+            answer_count += 1
+        jaysons = json.dumps(temp_record)
+        message = json.dumps(curl_api(clone_arg, "PUT", key, jaysons))
+        print(message)
+
     temp_record.clear()
+
+print(stripped_records)
