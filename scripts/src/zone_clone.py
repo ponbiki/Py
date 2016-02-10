@@ -38,14 +38,18 @@ for x in jsons['records']:
         x['domain'] = x['domain'].replace(sys.argv[2], sys.argv[3])
         new_domain_list.append([x['domain'], x['type']])
 
-record_list = []
-
 for y in domain_list:
-    time.sleep(1.25)
+    time.sleep(.75)
     record_arg = URL + "/" + sys.argv[2] + "/" + y[0] + "/" + y[1]
     temp_record = (json.loads(curl_api(record_arg, "GET", AUTH)))
     temp_record['domain'] = temp_record['domain'].replace(sys.argv[2], sys.argv[3])
     temp_record['zone'] = temp_record['zone'].replace(sys.argv[2], sys.argv[3])
     clone_arg = URL + "/" + sys.argv[3] + "/" + temp_record['domain'] + "/" + temp_record['type']
     jzonz = json.dumps(temp_record)
-    print(curl_api(clone_arg, "PUT", AUTH, jzonz))
+    message = json.dumps(curl_api(clone_arg, "PUT", AUTH, jzonz))
+    print(message)
+    if "Rate limit" in message:
+        time.sleep(3)
+        message = json.dumps(curl_api(clone_arg, "PUT", AUTH, jzonz))
+        print(message)
+    temp_record.clear()
