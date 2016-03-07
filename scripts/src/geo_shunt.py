@@ -3,6 +3,7 @@
 import re
 import sys
 from pymongo import MongoClient
+from pprint import pprint
 
 database = 'test'
 collection = 'xxxx'
@@ -18,7 +19,9 @@ class MongoShunt:
         self.ver = ''
 
     def find_ip4(self, ip_addr):
-        for shunt in list(self.gs.find(ip_addr)):
+        rgx = r'.*' + re.escape(ip_addr) + '.*'
+        reg = re.compile(rgx)
+        for shunt in list(self.gs.find({'prefixes': reg})):
             self.results.append(shunt)
 
     def search(self, ver):
@@ -26,14 +29,15 @@ class MongoShunt:
             self.ver = "ipv4"
         elif ver == "6":
             self.ver = "ipv6"
+        else:
+            print("Invalid Protocol")
+            exit()
 
 
 def main():
     x = MongoShunt()
-    srch = sys.argv[1]
-    rgx = r'.*' + re.escape(srch) + '.*'
-    reg = re.compile(rgx)
-    x.find_ip4({'prefixes':reg})
+    x.find_ip4(sys.argv[1])
+    pprint(x.results)
 
 
 if __name__ == '__main__':
