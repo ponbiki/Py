@@ -25,6 +25,7 @@ BGP_CONF = '/etc/nsone/bgp.conf'
 BGP_UP = 'bgp-up.conf'
 PUERTO = 179
 
+
 def check_BGP():
     '''
     Checks bgp.conf for up / down, and the sockets for v4 and v6 BGP established.
@@ -60,6 +61,7 @@ def check_BGP():
                 continue
         print 'bgp.status %d %d protocol=IPv6' % (thyme, v6_up)
         print 'bgp.status %d %d protocol=IPv4' % (thyme, v4_up)
+
 
 def main():
     while True:

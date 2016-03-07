@@ -17,6 +17,7 @@ class MongoShunt:
         self.gs = db[collection]
         self.results = []
         self.ver = ''
+        self.shunt = None
 
     def find_ip4(self, ip_addr):
         rgx = r'.*' + re.escape(ip_addr) + '.*'
@@ -32,6 +33,13 @@ class MongoShunt:
         else:
             print("Invalid Protocol")
             exit()
+
+    def select_shunt(self, shunt_num):
+        self.shunt = self.results[shunt_num]
+
+    def parse_shunt(self):
+
+
 
 
 def main():
