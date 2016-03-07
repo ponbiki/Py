@@ -8,6 +8,7 @@ from StringIO import StringIO
 '''Outputs an account summary as a formatted print or a JSON with usage as:
 user@computer ~ $ python dns_summary.py <key> <option>
 JSON option: j
+CSV option: c  ## will change to proper CSV lib handling
 print option: p
 May be extended to output BIND files'''
 
@@ -60,5 +61,11 @@ elif sys.argv[2] == 'p':
          for w in x['answers']:
             print('    Answer:   ' + w)
          print('\n')
+elif sys.argv[2] == 'c':
+    print "zone, record, type, ttl, answer\n"
+    for y in zone_list:
+        for x in big_dic[y]:
+            for w in x['answers']:
+                print "%s, %s, %s, %s, %s" % (y, x['domain'], x['type'], str(x['ttl']), w)
 else:
    print('Unrecognized option: ' + sys.argv[2])
