@@ -33,4 +33,3 @@ for sub in ip_list:
    shunt = template[data]
    shuntjs = {snkey: shunt}
    print("  " + (json.dumps(shuntjs))[1:-1] + ",")
-   

@@ -2,12 +2,16 @@
 
 import re
 import sys
+import json
 from pymongo import MongoClient
 from pprint import pprint
 
 database = 'test'
 collection = 'geo_shunts'
+with open('states.json') as fd:
+    states = json.loads(fd.read())
 
+pprint(states)
 
 class MongoShunt:
 
@@ -32,6 +36,7 @@ class MongoShunt:
         else:
             print("Invalid Protocol")
             exit()
+
 
 
 def main():
