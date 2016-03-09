@@ -10,8 +10,12 @@ database = 'test'
 collection = 'geo_shunts'
 with open('states.json') as fd:
     states = json.loads(fd.read())
+with open('countries.json') as fd:
+    countries = json.loads(fd.read())
 
 pprint(states)
+pprint(countries)
+
 
 class MongoShunt:
 
