@@ -1,0 +1,108 @@
+
+{
+	"_id" : ObjectId("56be17a681b3c215b92a15df"),
+	"comment" : "12-Feb-2016: Initial conversion from JSON.",
+	"city" : {
+		"city" : {
+			"geoname_id" : 0,
+			"names" : {
+				"en" : "Tokyo"
+			}
+		},
+		"subdivisions" : [ ],
+		"location" : {
+			"latitude" : 35.685001373291016,
+			"time_zone" : "Asia/Tokyo",
+			"longitude" : 139.75140380859375
+		},
+		"registered_country" : {
+
+		},
+		"traits" : {
+			"netmask" : 120,
+			"ip_address" : "124.215.196.0"
+		},
+		"country" : {
+			"geoname_id" : 0,
+			"iso_code" : "JP",
+			"names" : {
+				"en" : "Japan"
+			}
+		},
+		"postal" : {
+			"code" : "None"
+		},
+		"continent" : {
+			"geoname_id" : 0,
+			"code" : "AS",
+			"names" : {
+				"en" : "Asia"
+			}
+		}
+	},
+	"isp" : {
+
+	},
+	"prefixes" : [
+		"124.215.196.0/24"
+	],
+	"active" : true
+},
+{
+	"_id" : ObjectId("56be17a681b3c215b92a15b8"),
+	"comment" : "12-Feb-2016: Initial conversion from JSON.",
+	"city" : {
+		"city" : {
+			"geoname_id" : 0,
+			"names" : {
+				"en" : "New York"
+			}
+		},
+		"subdivisions" : [
+			{
+				"geoname_id" : 0,
+				"iso_code" : "NY",
+				"names" : {
+					"en" : "New York"
+				}
+			}
+		],
+		"location" : {
+			"latitude" : 40.73910140991211,
+			"time_zone" : "America/New_York",
+			"longitude" : -73.98259735107422,
+			"metro_code" : "501"
+		},
+		"registered_country" : {
+
+		},
+		"traits" : {
+			"netmask" : 128,
+			"ip_address" : "208.85.4.114"
+		},
+		"country" : {
+			"geoname_id" : 0,
+			"iso_code" : "US",
+			"names" : {
+				"en" : "United States"
+			}
+		},
+		"postal" : {
+			"code" : "10010"
+		},
+		"continent" : {
+			"geoname_id" : 0,
+			"code" : "NA",
+			"names" : {
+				"en" : "North America"
+			}
+		}
+	},
+	"isp" : {
+
+	},
+	"prefixes" : [
+		"208.85.4.114/32"
+	],
+	"active" : true
+}
