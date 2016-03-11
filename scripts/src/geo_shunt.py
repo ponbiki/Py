@@ -19,17 +19,17 @@ class MongoShunt(object):
     def __init__(self):
         client = MongoClient()
         db = client[database]
-        self.gs = db[collection]
-        self.results = []
-        self.__ver = ''
+        self.__gs = db[collection]
+        self.__results = []
+        self.ver = ''
         self.__search_param = {}
-        self.__shunt = {}
+        self.shunt = {}
 
     def find_ip4(self, ip_addr):
         rgx = r'.*' + re.escape(ip_addr) + '.*'
         reg = re.compile(rgx)
-        for shunt in list(self.gs.find({'prefixes': reg})):
-            self.results.append(shunt)
+        for shunt in list(self.__gs.find({'prefixes': reg})):
+            self.__results.append(shunt)
 
     @property
     def shunt(self):
@@ -37,7 +37,7 @@ class MongoShunt(object):
 
     @shunt.setter
     def shunt(self, selected_shunt):
-        self.__shunt = selected_shunt
+        self.shunt = selected_shunt
 
     @property
     def search_param(self):
@@ -54,12 +54,21 @@ class MongoShunt(object):
     @ver.setter
     def ver(self, ver_in):
         if ver_in == "4":
-            self.__ver = "ipv4"
+            self.ver = "ipv4"
         elif ver_in == "6":
-            self.__ver = "ipv6"
+            self.ver = "ipv6"
         else:
             print("Invalid Protocol")
             exit()
+
+    def matches_list(self):
+        if len(self.__results) > 1:
+            self.select_shunt()
+        else:
+            self.shunt = self.__results[0]
+
+    def select_shunt(self):
+        pass
 
 
 def main():

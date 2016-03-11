@@ -1,5 +1,4 @@
-
-{
+[{
 	"_id" : ObjectId("56be17a681b3c215b92a15df"),
 	"comment" : "12-Feb-2016: Initial conversion from JSON.",
 	"city" : {
@@ -105,4 +104,4 @@
 		"208.85.4.114/32"
 	],
 	"active" : true
-}
+}]
