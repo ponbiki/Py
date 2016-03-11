@@ -18,7 +18,7 @@
 		"registered_country" : {
 
 		},
-		"traits" : {
+ 		"traits" : {
 			"netmask" : 120,
 			"ip_address" : "124.215.196.0"
 		},

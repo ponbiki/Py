@@ -22,12 +22,30 @@ class MongoShunt(object):
         self.gs = db[collection]
         self.results = []
         self.__ver = ''
+        self.__search_param = {}
+        self.__shunt = {}
 
     def find_ip4(self, ip_addr):
         rgx = r'.*' + re.escape(ip_addr) + '.*'
         reg = re.compile(rgx)
         for shunt in list(self.gs.find({'prefixes': reg})):
             self.results.append(shunt)
+
+    @property
+    def shunt(self):
+        self.__shunt
+
+    @shunt.setter
+    def shunt(self, selected_shunt):
+        self.__shunt = selected_shunt
+
+    @property
+    def search_param(self):
+        pass
+
+    @search_param.setter
+    def search_param(self, param):
+        self.__search_param = param
 
     @property
     def ver(self):
