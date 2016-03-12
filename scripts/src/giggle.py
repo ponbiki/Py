@@ -16,7 +16,7 @@ x2 = 0
 
 
 while x != ord('0'):
-    screen = curses.wrapper(curses.initscr())
+    screen = curses.initscr()
     curses.start_color()
 
     screen.clear()
@@ -61,4 +61,3 @@ while x != ord('0'):
 
     if x == ord('0'):
         curses.endwin()
-
