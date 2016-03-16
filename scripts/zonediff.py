@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # requires python-software-properties, pycurl, and of course *NIX dig
 
 import collections
