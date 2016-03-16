@@ -7,7 +7,7 @@ from curses import panel
 class Menu(object):
 
     def __init__(self, items, stdscr):
-        self.window = stdscr.subwin(0,0)
+        self.window = stdscr.subwin(0, 0)
         self.window.keypad(1)
         self.panel = panel.new_panel(self.window)
         self.panel.hide()
@@ -15,7 +15,7 @@ class Menu(object):
 
         self.position = 0
         self.items = items
-        self.items.append(('exit','exit'))
+        self.items.append(('exit', 'exit'))
 
     def navigate(self, n):
         self.position += n
