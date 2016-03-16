@@ -67,4 +67,8 @@ def main(screen):
         if x == ord('0'):
             curses.endwin()
 
-if
+try:
+    curses.wrapper(main)
+except KeyboardInterrupt:
+    print "User requested exti!"
+    exit()
