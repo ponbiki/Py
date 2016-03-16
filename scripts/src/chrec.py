@@ -5,6 +5,7 @@ import pycurl
 from StringIO import StringIO
 from copy import deepcopy
 
+
 def buster(url, verb, authhead, *args):
     buffer = StringIO()
     c = pycurl.Curl()

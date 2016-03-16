@@ -6,8 +6,8 @@ from curses import panel
 
 class Menu(object):
 
-    def __init__(self, items, stdscreen):
-        self.window = stdscreen.subwin(0,0)
+    def __init__(self, items, stdscr):
+        self.window = stdscr.subwin(0,0)
         self.window.keypad(1)
         self.panel = panel.new_panel(self.window)
         self.panel.hide()
@@ -63,8 +63,8 @@ class Menu(object):
 
 class MyApp(object):
 
-    def __init__(self, stdscreen):
-        self.screen = stdscreen
+    def __init__(self, stdscr):
+        self.screen = stdscr
         curses.curs_set(0)
 
         submenu_items = [
