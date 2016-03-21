@@ -1,21 +1,28 @@
 #!/usr/bin/environment python
 
 import curses
+import curses.panel
+import geo_shunt as gs
+from pprint import pprint
 
 
 class App(object):
     def __init__(self, screen):
 
         self.screen = screen
+
         x = 0
         x2 = 0
+        x3 = 0
+        cmd = None
+        country_match = False
 
         while x != ord('0'):
             curses.start_color()
             curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLUE)
             curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
 
-            self.screen.bkgd(curses.color_pair(1))
+            self.screen.bkgd(curses.color_pair(2))
             self.screen.refresh()
 
             self.screen.border(0)
@@ -48,11 +55,42 @@ class App(object):
                     if x2 == ord('1'):
                         self.screen.clear()
                         self.screen.border(0)
-                        self.city_name = self.get_param("City Name")
-                        self.state_name = self.get_param("State/Province/Territory Name")
-                        self.country_name = self.get_param("Country Name")
-                        self.time_zone = self.get_param("Time Zone")
+                        self.screen.addstr(2, 2, "Two-letter Country Code (e.g. US, NL)")
+                        self.screen.addstr(4, 4, "1 - Browse Codes")
+                        self.screen.addstr(5, 4, "2 - Enter Code")
+                        self.screen.addstr(7, 4, "0 - Go Back")
                         self.screen.refresh()
+
+                        x3 = self.screen.getch()
+
+                        if x3 == ord('1'):
+                            while cmd != ord('q'):
+                                self.pad = curses.newpad(100, 100)
+                                self.pad.bkgd(curses.color_pair(1))
+                                pos = 2
+                                for key in sorted(gs.countries.iterkeys()):
+                                    self.pad.addstr(pos, 1, key + " -- " + gs.countries[key])
+                                    pos += 1
+                                self.pad.refresh(0, 0, 5, 5, 20, 75)
+                                cmd = self.pad.getch()
+                                pad_pos = 0
+                                if cmd == curses.KEY_DOWN:
+                                    pad_pos += 1
+                                    self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
+                                    cmd = self.pad.getch()
+                                elif cmd == curses.KEY_UP:
+                                    pad_pos -= 1
+                                    self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
+                                    cmd = self.pad.getch()
+
+                        if x3 == ord('2'):
+                            while country_match is False:
+                                self.screen.clear()
+                                self.screen.border(0)
+                                self.country_code = self.get_param("Enter Valid Country Code").strip().upper()
+                                if self.country_code in gs.countries:
+                                    country_match = True
+                                self.screen.refresh()
 
                     if x2 == ord('0'):
                         curses.endwin()
@@ -71,3 +109,4 @@ class App(object):
 
 if __name__ == '__main__':
     curses.wrapper(App)
+
