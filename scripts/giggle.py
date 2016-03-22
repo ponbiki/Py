@@ -13,7 +13,6 @@ class App(object):
         x = 0
         x2 = 0
         x3 = 0
-        cmd = None
         country_match = False
 
         while x != ord('0'):
