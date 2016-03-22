@@ -9,13 +9,15 @@ class App(object):
 
         self.screen = screen
 
-        x = 0
+        x1 = 0
         x2 = 0
         x3 = 0
         x4 = 0
         country_match = False
+        state_match = False
+        province_match = False
 
-        while x != ord('0'):
+        while x1 != ord('0'):
             curses.start_color()
             curses.curs_set(0)
             curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLUE)
@@ -33,13 +35,13 @@ class App(object):
             self.screen.addstr(9, 4, "0 - Exit")
             self.screen.refresh()
 
-            x = screen.getch()
+            x1 = screen.getch()
 
-            if x == ord('1'):
+            if x1 == ord('1'):
                 self.ip_addr = self.get_param("Enter partial or full IP address or CIDR")
                 screen.refresh()
 
-            if x == ord('2'):
+            if x1 == ord('2'):
                 while x2 != ord('0'):
                     self.screen.clear()
                     self.screen.border(0)
@@ -92,8 +94,7 @@ class App(object):
                                         cmd = self.pad.getch()
                                     else:
                                         break
-
-                            if x3 == ord('2'):
+                            elif x3 == ord('2'):
                                 while country_match is False:
                                     self.screen.clear()
                                     self.screen.border(0)
@@ -143,7 +144,14 @@ class App(object):
                                                         cmd = self.pad.getch()
                                                     else:
                                                         break
-
+                                            elif x4 == ord('2'):
+                                                while state_match is False:
+                                                    self.screen.clear()
+                                                    self.screen.border(0)
+                                                    self.state_code = self.get_param("Enter Valid State Code").strip().upper()
+                                                    self.screen.refresh()
+                                                    if self.state_code in gs.states:
+                                                        state_match = True
                                         elif self.country_code == 'CA':
                                             self.screen.clear()
                                             self.screen.border(0)
@@ -184,11 +192,19 @@ class App(object):
                                                         cmd = self.pad.getch()
                                                     else:
                                                         break
+                                            elif x4 == ord('2'):
+                                                while province_match is False:
+                                                    self.screen.clear()
+                                                    self.screen.border(0)
+                                                    self.province_code = self.get_param("Enter Valid State Code").strip().upper()
+                                                    self.screen.refresh()
+                                                    if self.province_code in gs.provinces:
+                                                        province_match = True
 
                     if x2 == ord('0'):
                         curses.endwin()
 
-            if x == ord('0'):
+            if x1 == ord('0'):
                 curses.endwin()
 
     def get_param(self, prompt_string):
