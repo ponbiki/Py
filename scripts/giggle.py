@@ -103,17 +103,28 @@ class App(object):
                                     if self.country_code in gs.countries:
                                         country_match = True
 
-                                        while x4 != ord('0'):
-                                            if self.country_code == 'US':
-                                                self.screen.clear()
-                                                self.screen.border(0)
-                                                self.screen.addstr(2, 2, "Two-letter Country Code (e.g. US, NL)")
-                                                self.screen.addstr(4, 4, "1 - Browse Codes")
-                                                self.screen.addstr(5, 4, "2 - Enter Code")
-                                                self.screen.addstr(7, 4, "0 - Go Back")
-                                                self.screen.refresh()
+                                    while x4 != ord('0'):
+                                        if self.country_code == 'US':
+                                            self.screen.clear()
+                                            self.screen.border(0)
+                                            self.screen.addstr(2, 2, "Two-letter US State Code (e.g. CA, NY)")
+                                            self.screen.addstr(4, 4, "1 - Browse Codes")
+                                            self.screen.addstr(5, 4, "2 - Enter Code")
+                                            self.screen.addstr(7, 4, "0 - Go Back")
+                                            self.screen.refresh()
 
-                                                x4 = self.screen.getch()
+                                            x4 = self.screen.getch()
+
+                                        elif self.country_code == 'CA':
+                                            self.screen.clear()
+                                            self.screen.border(0)
+                                            self.screen.addstr(2, 2, "Two-letter Canadian Province Code (e.g. CA, NY)")
+                                            self.screen.addstr(4, 4, "1 - Browse Codes")
+                                            self.screen.addstr(5, 4, "2 - Enter Code")
+                                            self.screen.addstr(7, 4, "0 - Go Back")
+                                            self.screen.refresh()
+
+                                            x4 = self.screen.getch()
 
                     if x2 == ord('0'):
                         curses.endwin()

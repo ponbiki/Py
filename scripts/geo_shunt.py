@@ -12,6 +12,8 @@ with open('states.json') as fd:
     states = json.loads(fd.read())
 with open('countries.json') as fd:
     countries = json.loads(fd.read())
+with open('provinces.json') as fd:
+    provinces = json.loads(fd.read())
 
 
 class MongoShunt(object):
