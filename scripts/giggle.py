@@ -1,7 +1,6 @@
 #!/usr/bin/environment python
 
 import curses
-import curses.panel
 import geo_shunt as gs
 from pprint import pprint
 
@@ -65,23 +64,22 @@ class App(object):
 
                         if x3 == ord('1'):
                             while cmd != ord('q'):
-                                self.pad = curses.newpad(100, 100)
+                                self.pad = curses.newpad(len(gs.countries) + 4, 50)
                                 self.pad.bkgd(curses.color_pair(1))
-                                pos = 2
+                                pos = 3
+                                self.pad.addstr(1, 1, "Press 'q' to exit")
                                 for key in sorted(gs.countries.iterkeys()):
-                                    self.pad.addstr(pos, 1, key + " -- " + gs.countries[key])
+                                    self.pad.addstr(pos, 2, key + " : " + gs.countries[key])
                                     pos += 1
                                 self.pad.refresh(0, 0, 5, 5, 20, 75)
-                                cmd = self.pad.getch()
                                 pad_pos = 0
+                                cmd = self.pad.getch()
                                 if cmd == curses.KEY_DOWN:
                                     pad_pos += 1
                                     self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
-                                    cmd = self.pad.getch()
                                 elif cmd == curses.KEY_UP:
                                     pad_pos -= 1
                                     self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
-                                    cmd = self.pad.getch()
 
                         if x3 == ord('2'):
                             while country_match is False:
@@ -109,4 +107,3 @@ class App(object):
 
 if __name__ == '__main__':
     curses.wrapper(App)
-
