@@ -69,8 +69,9 @@ class App(object):
                                 self.pad.bkgd(curses.color_pair(1))
                                 pos = 3
                                 self.pad.addstr(1, 1, "'z': page down, 'a': page up")
-                                for key in sorted(gs.countries.iterkeys()):
-                                    self.pad.addstr(pos, 2, key + " : " + gs.countries[key])
+                                srt_cc = [(k, v) for v, k in sorted([(v, k) for k, v in gs.countries.items()])]
+                                for cntry in srt_cc:
+                                    self.pad.addstr(pos, 2, cntry[0] + " : " + cntry[1])
                                     pos += 1
                                 self.pad.refresh(0, 0, 4, 10, 20, 75)
                                 pad_pos = 0
