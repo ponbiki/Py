@@ -51,51 +51,53 @@ class App(object):
                     x2 = self.screen.getch()
 
                     if x2 == ord('1'):
-                        self.screen.clear()
-                        self.screen.border(0)
-                        self.screen.addstr(2, 2, "Two-letter Country Code (e.g. US, NL)")
-                        self.screen.addstr(4, 4, "1 - Browse Codes")
-                        self.screen.addstr(5, 4, "2 - Enter Code")
-                        self.screen.addstr(7, 4, "0 - Go Back")
-                        self.screen.refresh()
+                        while x3 != ord('0'):
+                            self.screen.clear()
+                            self.screen.border(0)
+                            self.screen.addstr(2, 2, "Two-letter Country Code (e.g. US, NL)")
+                            self.screen.addstr(4, 4, "1 - Browse Codes")
+                            self.screen.addstr(5, 4, "2 - Enter Code")
+                            self.screen.addstr(7, 4, "0 - Go Back")
+                            self.screen.refresh()
 
-                        x3 = self.screen.getch()
+                            x3 = self.screen.getch()
 
-                        if x3 == ord('1'):
-                            self.pad = curses.newpad(len(gs.countries) + 6, 50)
-                            self.pad.bkgd(curses.color_pair(1))
-                            pos = 3
-                            self.pad.addstr(1, 1, "'z': page down, 'a': page up")
-                            for key in sorted(gs.countries.iterkeys()):
-                                self.pad.addstr(pos, 2, key + " : " + gs.countries[key])
-                                pos += 1
-                            self.pad.refresh(0, 0, 5, 5, 20, 75)
-                            pad_pos = 0
-                            cmd = self.pad.getch()
-                            while cmd != ord('q'):
-                                if cmd == ord('z'):
-                                    pad_pos += 5
-                                    if pad_pos > len(gs.countries) - 13:
-                                        pad_pos = len(gs.countries) - 13
-                                    self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
-                                    cmd = self.pad.getch()
-                                elif cmd == ord('a'):
-                                    pad_pos -= 5
-                                    if pad_pos < 1:
-                                        pad_pos = 1
-                                    self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
-                                    cmd = self.pad.getch()
-                                else:
-                                    break
-
-                        if x3 == ord('2'):
-                            while country_match is False:
-                                self.screen.clear()
-                                self.screen.border(0)
-                                self.country_code = self.get_param("Enter Valid Country Code").strip().upper()
-                                if self.country_code in gs.countries:
-                                    country_match = True
+                            if x3 == ord('1'):
                                 self.screen.refresh()
+                                self.pad = curses.newpad(len(gs.countries) + 6, 50)
+                                self.pad.bkgd(curses.color_pair(1))
+                                pos = 3
+                                self.pad.addstr(1, 1, "'z': page down, 'a': page up")
+                                for key in sorted(gs.countries.iterkeys()):
+                                    self.pad.addstr(pos, 2, key + " : " + gs.countries[key])
+                                    pos += 1
+                                self.pad.refresh(0, 0, 5, 5, 20, 75)
+                                pad_pos = 0
+                                cmd = self.pad.getch()
+                                while cmd != ord('q'):
+                                    if cmd == ord('z'):
+                                        pad_pos += 5
+                                        if pad_pos > len(gs.countries) - 13:
+                                            pad_pos = len(gs.countries) - 13
+                                        self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
+                                        cmd = self.pad.getch()
+                                    elif cmd == ord('a'):
+                                        pad_pos -= 5
+                                        if pad_pos < 1:
+                                            pad_pos = 1
+                                        self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
+                                        cmd = self.pad.getch()
+                                    else:
+                                        break
+
+                            if x3 == ord('2'):
+                                while country_match is False:
+                                    self.screen.clear()
+                                    self.screen.border(0)
+                                    self.country_code = self.get_param("Enter Valid Country Code").strip().upper()
+                                    if self.country_code in gs.countries:
+                                        country_match = True
+                                    self.screen.refresh()
 
                     if x2 == ord('0'):
                         curses.endwin()
