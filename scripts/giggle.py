@@ -13,6 +13,7 @@ class App(object):
         x = 0
         x2 = 0
         x3 = 0
+        x4 = 0
         country_match = False
 
         while x != ord('0'):
@@ -71,7 +72,7 @@ class App(object):
                                 for key in sorted(gs.countries.iterkeys()):
                                     self.pad.addstr(pos, 2, key + " : " + gs.countries[key])
                                     pos += 1
-                                self.pad.refresh(0, 0, 5, 5, 20, 75)
+                                self.pad.refresh(0, 0, 4, 10, 20, 75)
                                 pad_pos = 0
                                 cmd = self.pad.getch()
                                 while cmd != ord('q'):
@@ -79,13 +80,13 @@ class App(object):
                                         pad_pos += 5
                                         if pad_pos > len(gs.countries) - 13:
                                             pad_pos = len(gs.countries) - 13
-                                        self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
+                                        self.pad.refresh(pad_pos, 0, 4, 10, 20, 75)
                                         cmd = self.pad.getch()
                                     elif cmd == ord('a'):
                                         pad_pos -= 5
                                         if pad_pos < 1:
                                             pad_pos = 1
-                                        self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
+                                        self.pad.refresh(pad_pos, 0, 4, 10, 20, 75)
                                         cmd = self.pad.getch()
                                     else:
                                         break
@@ -98,6 +99,18 @@ class App(object):
                                     self.screen.refresh()
                                     if self.country_code in gs.countries:
                                         country_match = True
+
+                                        while x4 != ord('0'):
+                                            if self.country_code == 'US':
+                                                self.screen.clear()
+                                                self.screen.border(0)
+                                                self.screen.addstr(2, 2, "Two-letter Country Code (e.g. US, NL)")
+                                                self.screen.addstr(4, 4, "1 - Browse Codes")
+                                                self.screen.addstr(5, 4, "2 - Enter Code")
+                                                self.screen.addstr(7, 4, "0 - Go Back")
+                                                self.screen.refresh()
+
+                                                x4 = self.screen.getch()
 
                     if x2 == ord('0'):
                         curses.endwin()

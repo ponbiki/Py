@@ -73,13 +73,13 @@ class MongoShunt(object):
         else:
             self.country = {cc_clean: countries[cc_clean]
 
-    @staticmethod
-    def cc_validate(cc_unchecked):
-        cc_prepped = cc_unchecked.strip().upper()
-        if cc_prepped in countries:
-            return cc_prepped
-        else:
-            return False
+    #@staticmethod
+    #def cc_validate(cc_unchecked):
+    #    cc_prepped = cc_unchecked.strip().upper()
+    #    if cc_prepped in countries:
+    #        return cc_prepped
+    #    else:
+    #        return False
 
     def matches_list(self):
         if len(self.__results) > 1:
