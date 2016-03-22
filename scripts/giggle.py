@@ -115,16 +115,76 @@ class App(object):
 
                                             x4 = self.screen.getch()
 
+                                            if x4 == ord('1'):
+                                                self.screen.refresh()
+                                                curses.curs_set(0)
+                                                self.pad = curses.newpad(len(gs.states) + 6, 50)
+                                                self.pad.bkgd(curses.color_pair(1))
+                                                pos = 3
+                                                self.pad.addstr(1, 1, "'z': page down, 'a': page up")
+                                                srt_st = [(k, v) for v, k in sorted([(v, k) for k, v in gs.states.items()])]
+                                                for state in srt_st:
+                                                    self.pad.addstr(pos, 2, state[0] + " : " + state[1])
+                                                    pos += 1
+                                                self.pad.refresh(0, 0, 4, 10, 20, 75)
+                                                pad_pos = 0
+                                                cmd = self.pad.getch()
+                                                while cmd != ord('q'):
+                                                    if cmd == ord('z'):
+                                                        pad_pos += 5
+                                                        if pad_pos > len(gs.states) - 13:
+                                                            pad_pos = len(gs.states) - 13
+                                                        self.pad.refresh(pad_pos, 0, 4, 10, 20, 75)
+                                                        cmd = self.pad.getch()
+                                                    elif cmd == ord('a'):
+                                                        pad_pos -= 5
+                                                        if pad_pos < 1:
+                                                            pad_pos = 1
+                                                        self.pad.refresh(pad_pos, 0, 4, 10, 20, 75)
+                                                        cmd = self.pad.getch()
+                                                    else:
+                                                        break
+
                                         elif self.country_code == 'CA':
                                             self.screen.clear()
                                             self.screen.border(0)
-                                            self.screen.addstr(2, 2, "Two-letter Canadian Province Code (e.g. CA, NY)")
+                                            self.screen.addstr(2, 2, "Two-letter Canadian Province Code (e.g. BC, ON)")
                                             self.screen.addstr(4, 4, "1 - Browse Codes")
                                             self.screen.addstr(5, 4, "2 - Enter Code")
                                             self.screen.addstr(7, 4, "0 - Go Back")
                                             self.screen.refresh()
 
                                             x4 = self.screen.getch()
+
+                                            if x4 == ord('1'):
+                                                self.screen.refresh()
+                                                curses.curs_set(0)
+                                                self.pad = curses.newpad(len(gs.provinces) + 6, 50)
+                                                self.pad.bkgd(curses.color_pair(1))
+                                                pos = 3
+                                                self.pad.addstr(1, 1, "'z': page down, 'a': page up")
+                                                srt_pv = [(k, v) for v, k in sorted([(v, k) for k, v in gs.provinces.items()])]
+                                                for prov in srt_pv:
+                                                    self.pad.addstr(pos, 2, prov[0] + " : " + prov[1])
+                                                    pos += 1
+                                                self.pad.refresh(0, 0, 4, 10, 20, 75)
+                                                pad_pos = 0
+                                                cmd = self.pad.getch()
+                                                while cmd != ord('q'):
+                                                    if cmd == ord('z'):
+                                                        pad_pos += 5
+                                                        if pad_pos > len(gs.provinces) - 13:
+                                                            pad_pos = len(gs.provinces) - 13
+                                                        self.pad.refresh(pad_pos, 0, 4, 10, 20, 75)
+                                                        cmd = self.pad.getch()
+                                                    elif cmd == ord('a'):
+                                                        pad_pos -= 5
+                                                        if pad_pos < 1:
+                                                            pad_pos = 1
+                                                        self.pad.refresh(pad_pos, 0, 4, 10, 20, 75)
+                                                        cmd = self.pad.getch()
+                                                    else:
+                                                        break
 
                     if x2 == ord('0'):
                         curses.endwin()
