@@ -95,9 +95,9 @@ class App(object):
                                     self.screen.clear()
                                     self.screen.border(0)
                                     self.country_code = self.get_param("Enter Valid Country Code").strip().upper()
+                                    self.screen.refresh()
                                     if self.country_code in gs.countries:
                                         country_match = True
-                                    self.screen.refresh()
 
                     if x2 == ord('0'):
                         curses.endwin()

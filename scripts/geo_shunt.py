@@ -24,12 +24,13 @@ class MongoShunt(object):
         self.ver = ''
         self.__search_param = {}
         self.shunt = {}
+        self.country = {}
 
     def find_ip4(self, ip_addr):
         rgx = r'.*' + re.escape(ip_addr) + '.*'
         reg = re.compile(rgx)
-        for shunt in list(self.__gs.find({'prefixes': reg})):
-            self.__results.append(shunt)
+        for match in list(self.__gs.find({'prefixes': reg})):
+            self.__results.append(match)
 
     @property
     def shunt(self):
@@ -58,8 +59,27 @@ class MongoShunt(object):
         elif ver_in == "6":
             self.ver = "ipv6"
         else:
-            print("Invalid Protocol")
-            exit()
+            return "Invalid Protocol"
+
+    @property
+    def country(self):
+        return self.__country
+
+    @country.setter
+    def country(self, cc_in):
+        cc_clean = self.cc_validate(cc_in)
+        if cc_clean is False:
+            return "Invalid Country Code"
+        else:
+            self.country = {cc_clean: countries[cc_clean]
+
+    @staticmethod
+    def cc_validate(cc_unchecked):
+        cc_prepped = cc_unchecked.strip().upper()
+        if cc_prepped in countries:
+            return cc_prepped
+        else:
+            return False
 
     def matches_list(self):
         if len(self.__results) > 1:
