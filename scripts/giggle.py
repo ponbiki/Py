@@ -18,6 +18,7 @@ class App(object):
 
         while x != ord('0'):
             curses.start_color()
+            curses.curs_set(0)
             curses.init_pair(1, curses.COLOR_YELLOW, curses.COLOR_BLUE)
             curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
 
@@ -65,6 +66,7 @@ class App(object):
 
                             if x3 == ord('1'):
                                 self.screen.refresh()
+                                curses.curs_set(0)
                                 self.pad = curses.newpad(len(gs.countries) + 6, 50)
                                 self.pad.bkgd(curses.color_pair(1))
                                 pos = 3
@@ -121,11 +123,14 @@ class App(object):
 
     def get_param(self, prompt_string):
         curses.echo()
+        curses.curs_set(1)
         self.screen.clear()
         self.screen.border(0)
         self.screen.addstr(2, 2, prompt_string)
         self.screen.refresh()
         x_input = self.screen.getstr(4, 4, 20)
+        curses.curs_set(0)
+        curses.noecho()
         return x_input
 
 if __name__ == '__main__':
