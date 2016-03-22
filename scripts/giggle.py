@@ -2,7 +2,6 @@
 
 import curses
 import geo_shunt as gs
-from pprint import pprint
 
 
 class App(object):
