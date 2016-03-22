@@ -66,7 +66,7 @@ class App(object):
                             self.pad = curses.newpad(len(gs.countries) + 6, 50)
                             self.pad.bkgd(curses.color_pair(1))
                             pos = 3
-                            self.pad.addstr(1, 1, "Press 'q' to exit")
+                            self.pad.addstr(1, 1, "'z': page down, 'a': page up")
                             for key in sorted(gs.countries.iterkeys()):
                                 self.pad.addstr(pos, 2, key + " : " + gs.countries[key])
                                 pos += 1
@@ -87,7 +87,7 @@ class App(object):
                                     self.pad.refresh(pad_pos, 0, 5, 5, 20, 75)
                                     cmd = self.pad.getch()
                                 else:
-                                    pass
+                                    break
 
                         if x3 == ord('2'):
                             while country_match is False:
@@ -115,4 +115,3 @@ class App(object):
 
 if __name__ == '__main__':
     curses.wrapper(App)
-
