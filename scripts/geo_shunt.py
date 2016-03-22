@@ -102,43 +102,47 @@ if __name__ == '__main__':
     sys.exit(main())
 
 '''
-#!/usr/bin/env python
-
 import re
 import sys
 from pymongo import MongoClient
+from pprint import pprint
 
 database = 'test'
-collection = 'xxxx'
+collection = 'geo_shunts'
 
-class mongoShunt:
+
+class MongoShunt:
 
     def __init__(self):
         client = MongoClient()
-        db = client.database
-        mongoShunt.gs = db.collection
+        db = client[database]
+        self.gs = db[collection]
+        self.results = []
+        self.ver = ''
 
-    def findIp4(self, ip_addr):
-        mongoShunt.results = []
-        for shunt in mongoShunt.gs.find(ip_addr):
-            mongoShunt.results.append(shunt)
+    def find_ip4(self, ip_addr):
+        rgx = r'.*' + re.escape(ip_addr) + '.*'
+        reg = re.compile(rgx)
+        for shunt in list(self.gs.find({'prefixes': reg})):
+            self.results.append(shunt)
 
-    def search(self, ver):
+    def ver_set(self, ver):
         if ver == "4":
-            mongoShunt.ver = "ipv4"
+            self.ver = "ipv4"
         elif ver == "6":
-            mongoShunt.ver = "ipv6"
+            self.ver = "ipv6"
+        else:
+            print("Invalid Protocol")
+            exit()
+
 
 def main():
-    x = mongoShunt()
-    srch = sys.argv[1]
-    rgx = r'.*' + re.escape(srch) + '.*'
-    reg = re.compile(rgx)
-    x.findIp4({'prefixes':reg})
+    x = MongoShunt()
+    x.ver_set(sys.argv[1])
+    x.find_ip4(sys.argv[2])
+    pprint(x.results)
 
 
 if __name__ == '__main__':
     sys.exit(main())
-
-
 '''
