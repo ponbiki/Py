@@ -9,10 +9,11 @@ class App(object):
 
         self.screen = screen
 
-        x1 = 0
-        x2 = 0
-        x3 = 0
-        x4 = 0
+        x1 = None  # main menu
+        x2 = None  # New Shunt - IPv4/6 Menu
+        x3 = None  # New Shunt - Country Code Menu
+        x4 = None  # New Shunt - State/Province Menu
+        x5 = None  # New Shunt - City Menu
         country_match = False
         state_match = False
         province_match = False
@@ -38,7 +39,9 @@ class App(object):
             x1 = screen.getch()
 
             if x1 == ord('1'):
-                self.ip_addr = self.get_param("Enter partial or full IP address or CIDR")
+                self.screen.clear()
+                self.screen.corder(0)
+                self.ip_address = self.get_param("Enter partial or full IP address or CIDR")
                 screen.refresh()
 
             if x1 == ord('2'):
@@ -152,6 +155,11 @@ class App(object):
                                                     self.screen.refresh()
                                                     if self.state_code in gs.states:
                                                         state_match = True
+                                                        self.screen.clear()
+                                                        self.screen.border(0)
+                                                        self.city_name = self.get_param("Enter City Name").strip().title()
+                                                        screen.refresh()
+
                                         elif self.country_code == 'CA':
                                             self.screen.clear()
                                             self.screen.border(0)
@@ -200,6 +208,10 @@ class App(object):
                                                     self.screen.refresh()
                                                     if self.province_code in gs.provinces:
                                                         province_match = True
+                                                        self.screen.clear()
+                                                        self.screen.border(0)
+                                                        self.city_name = self.get_param("Enter City Name").strip().title()
+                                                        screen.refresh()
 
                     if x2 == ord('0'):
                         curses.endwin()
