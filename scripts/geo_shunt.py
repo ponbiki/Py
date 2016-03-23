@@ -3,6 +3,7 @@
 import re
 import sys
 import json
+import ipaddress
 from pymongo import MongoClient
 from pprint import pprint
 
@@ -90,6 +91,9 @@ class MongoShunt(object):
             self.shunt = self.__results[0]
 
     def select_shunt(self):
+        pass
+
+    def ipv4_validate(self, ipv4_in):
         pass
 
 

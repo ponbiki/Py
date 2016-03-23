@@ -13,7 +13,7 @@ class App(object):
         x2 = None  # New Shunt - IPv4/6 Menu
         x3 = None  # New Shunt - Country Code Menu
         x4 = None  # New Shunt - State/Province Menu
-        x5 = None  # New Shunt - City Menu
+        x5 = None  # New Shunt - Confirm Shunt
         country_match = False
         state_match = False
         province_match = False
@@ -69,7 +69,7 @@ class App(object):
                             x3 = self.screen.getch()
 
                             if x3 == ord('1'):
-                                self.screen.refresh()
+                                self.screen.clear()
                                 curses.curs_set(0)
                                 self.pad = curses.newpad(len(gs.countries) + 6, 50)
                                 self.pad.bkgd(curses.color_pair(1))
@@ -119,7 +119,7 @@ class App(object):
                                             x4 = self.screen.getch()
 
                                             if x4 == ord('1'):
-                                                self.screen.refresh()
+                                                self.screen.clear()
                                                 curses.curs_set(0)
                                                 self.pad = curses.newpad(len(gs.states) + 6, 50)
                                                 self.pad.bkgd(curses.color_pair(1))
@@ -172,7 +172,7 @@ class App(object):
                                             x4 = self.screen.getch()
 
                                             if x4 == ord('1'):
-                                                self.screen.refresh()
+                                                self.screen.clear()
                                                 curses.curs_set(0)
                                                 self.pad = curses.newpad(len(gs.provinces) + 6, 50)
                                                 self.pad.bkgd(curses.color_pair(1))
@@ -212,6 +212,17 @@ class App(object):
                                                         self.screen.border(0)
                                                         self.city_name = self.get_param("Enter City Name").strip().title()
                                                         screen.refresh()
+
+                                                        if x5 != ord('0'):
+                                                            self.screen.clear()
+                                                            self.screen.border(0)
+                                                            self.screen.addstr(2, 2, "Proposed Shunt")
+                                                            self.screen.addstr(4, 4, " Country => %s" % gs.countries[self.country_code])
+                                                            self.screen.addstr(5, 4, "Province => %s" % gs.provinces[self.province_code])
+                                                            self.screen.addstr(6, 4, "    City => %s" % self.city_name)
+                                                            screen.refresh()
+
+                                                            x5 = self.screen.getch()
 
                     if x2 == ord('0'):
                         curses.endwin()
