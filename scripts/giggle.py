@@ -68,7 +68,7 @@ class App(object):
                             if x3 == ord('1'):
                                 self.screen.refresh()
                                 curses.curs_set(0)
-                                self.pad = curses.newpad(len(gs.countries) + 6, 60)
+                                self.pad = curses.newpad(len(gs.countries) + 6, 50)
                                 self.pad.bkgd(curses.color_pair(1))
                                 pos = 3
                                 self.pad.addstr(1, 1, "'z': page down, 'a': page up")
@@ -118,7 +118,7 @@ class App(object):
                                             if x4 == ord('1'):
                                                 self.screen.refresh()
                                                 curses.curs_set(0)
-                                                self.pad = curses.newpad(len(gs.states) + 6, 60)
+                                                self.pad = curses.newpad(len(gs.states) + 6, 50)
                                                 self.pad.bkgd(curses.color_pair(1))
                                                 pos = 3
                                                 self.pad.addstr(1, 1, "'z': page down, 'a': page up")
@@ -166,7 +166,7 @@ class App(object):
                                             if x4 == ord('1'):
                                                 self.screen.refresh()
                                                 curses.curs_set(0)
-                                                self.pad = curses.newpad(len(gs.provinces) + 6, 60)
+                                                self.pad = curses.newpad(len(gs.provinces) + 6, 50)
                                                 self.pad.bkgd(curses.color_pair(1))
                                                 pos = 3
                                                 self.pad.addstr(1, 1, "'z': page down, 'a': page up")
