@@ -28,6 +28,7 @@ class MongoShunt(object):
         self.__search_param = {}
         self.shunt = {}
         self.country = {}
+        self.ipv4_valid = None
 
     def find_ip4(self, ip_addr):
         rgx = r'.*' + re.escape(ip_addr) + '.*'
@@ -91,10 +92,20 @@ class MongoShunt(object):
             self.shunt = self.__results[0]
 
     def select_shunt(self):
-        pass
+        pass  # will implement
 
-    def ipv4_validate(self, ipv4_in):
-        pass
+    @staticmethod
+    def ipv4_validate(ipv4_in):
+        rgx = r'^([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])' \
+              '\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])/([0-3]?[0-9])$'
+        reg = re.compile(rgx)
+        if re.match(reg, ipv4_in) is True:
+            try:
+                return str(ipaddress.IPv4Interface(unicode(ipv4_in)).network.with_prefixlen)
+            except ValueError:
+                return "Invalid IPv4 Subnet"
+        else:
+            return "Invalid IPv4 Subnet"
 
 
 def main():
