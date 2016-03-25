@@ -40,9 +40,9 @@ class App(object):
 
             if x1 == ord('1'):
                 self.screen.clear()
-                self.screen.corder(0)
+                self.screen.border(0)
                 self.ip_address = self.get_param("Enter partial or full IP address or CIDR")
-                screen.refresh()
+                self.screen.refresh()
 
             if x1 == ord('2'):
                 while x2 != ord('0'):
@@ -204,22 +204,25 @@ class App(object):
                                                 while province_match is False:
                                                     self.screen.clear()
                                                     self.screen.border(0)
-                                                    self.province_code = self.get_param("Enter Valid State Code").strip().upper()
+                                                    self.province_code = self.get_param("Enter Valid Province Code").strip().upper()
                                                     self.screen.refresh()
                                                     if self.province_code in gs.provinces:
                                                         province_match = True
                                                         self.screen.clear()
                                                         self.screen.border(0)
                                                         self.city_name = self.get_param("Enter City Name").strip().title()
+                                                        self.ipv4_addr = gs.ipv4_validate(self.get_param("Enter IPv4 CIDR").strip())
                                                         screen.refresh()
 
                                                         if x5 != ord('0'):
+
                                                             self.screen.clear()
                                                             self.screen.border(0)
                                                             self.screen.addstr(2, 2, "Proposed Shunt")
                                                             self.screen.addstr(4, 4, " Country => %s" % gs.countries[self.country_code])
                                                             self.screen.addstr(5, 4, "Province => %s" % gs.provinces[self.province_code])
                                                             self.screen.addstr(6, 4, "    City => %s" % self.city_name)
+                                                            self.screen.addstr(7, 4, "IP Address => %s" % self.ipv4_addr)
                                                             screen.refresh()
 
                                                             x5 = self.screen.getch()
