@@ -96,15 +96,9 @@ class MongoShunt(object):
 
     @staticmethod
     def ipv4_validate(ipv4_in):
-        rgx = r'^([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])' \
-              '\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])/([0-3]?[0-9])$'
-        reg = re.compile(rgx)
-        if re.match(reg, ipv4_in) is True:
-            try:
-                return str(ipaddress.IPv4Interface(unicode(ipv4_in)).network.with_prefixlen)
-            except ValueError:
-                return "Invalid IPv4 Subnet"
-        else:
+        try:
+            return str(ipaddress.IPv4Interface(unicode(ipv4_in)).network.with_prefixlen)
+        except ValueError:
             return "Invalid IPv4 Subnet"
 
 
@@ -162,4 +156,11 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
+'''
+
+'''
+        rgx = r'^([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])' \
+              '\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])\.([01]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])/([0-3]?[0-9])$'
+        reg = re.compile(rgx)
+        if re.match(reg, ipv4_in) is True:
 '''
