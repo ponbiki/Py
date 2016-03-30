@@ -1,6 +1,7 @@
 #!/usr/bin/environment python
 
 import curses
+
 import geo_shunt as gs
 
 
