@@ -31,7 +31,7 @@ def collect_metrics():
     It aggregates the packet and byte counts for each rule in a chain that hits an
     accept, mark, or drop rule, and then returns the data for each one in the format of:
     
-    iptables.<table>.<accept|mark|drop>.<packets|bytes> <timestamp> <cnt> chain=<chain>
+    iptables.<table>.<accept|mark|drop>.<packets|bytes> <timestamp> <cnt> chain=<chain> protocol=<IPv6|IPv4>
     
     There is also a per rule recursion that returns the packet and byte counts for 
     any rule containing a comment beginning with "tcollector:" and returns the
@@ -81,8 +81,8 @@ def collect_metrics():
                     if match.name == 'comment':
                         if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
                             cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-                            print 'iptables.%s.rules.%s %d %d rule=%s protocol=%s' % (str(param).lower(), 'packets', thyme, packets, cmnt, 'IPv4')
-                            print 'iptables.%s.rules.%s %d %d rule=%s protocol=%s' % (str(param).lower(), 'bytes', thyme, bytes, cmnt, 'IPv4')
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, packets, 'IPv4')
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, bytes, 'IPv4')
                         else:
                             pass
                     else:
@@ -137,8 +137,8 @@ def collect_metrics():
                     if match.name == 'comment':
                         if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
                             cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-                            print 'iptables.%s.rules.%s %d %d rule=%s protocol=%s' % (str(param).lower(), 'packets', thyme, packets, cmnt, 'IPv6')
-                            print 'iptables.%s.rules.%s %d %d rule=%s protocol=%s' % (str(param).lower(), 'bytes', thyme, bytes, cmnt, 'IPv6')
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, packets, 'IPv6')
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, bytes, 'IPv6')
                         else:
                             pass
                     else:
