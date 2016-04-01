@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #
 # iptables_stat.py -- a collector for tcollector/OpenTSDB
-# Copyright (C) 2015 NSONE, Inc.
+# Copyright (C) 2016 NSONE, Inc.
 #
 # This program is free software: you can redistribute it and/or modify it
 # under the terms of the GNU Lesser General Public License as published by
@@ -22,6 +22,8 @@ import sys
 
 INTERVAL = 30
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
+PARAMS6 = [iptc.Table6.FILTER, iptc.Table6.MANGLE, iptc.Table6.RAW, iptc.Table6.SECURITY]
+
 
 def collect_metrics():
     '''
@@ -92,6 +94,7 @@ def collect_metrics():
             print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainz)
             print 'iptables.%s.%s.%s %d %d chain=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz)
             chain.zero_counters()
+
 
 def main():
     while True:
