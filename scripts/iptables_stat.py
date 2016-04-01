@@ -95,6 +95,8 @@ def collect_metrics():
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz, 'IPv4')
             chain.zero_counters()
 
+# IPv6 section - check stderr
+
     for param6 in PARAMS6:
         thyme = int(time.time())
         table = iptc.Table6(param6)
