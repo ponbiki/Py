@@ -37,7 +37,7 @@ def collect_metrics():
     any rule containing a comment beginning with "tcollector:" and returns the
     data for each matched rule in the format of:
     
-    iptables.<table>.rules.<packets|bytes> <timestamp> <cnt> rule=<rule_marker>
+    iptables.<table>.rules.<packets|bytes> <timestamp> <cnt> rule=<rule_marker> protocol=<IPv6|IPv4>
     '''
     for param in PARAMS:
         thyme = int(time.time())
