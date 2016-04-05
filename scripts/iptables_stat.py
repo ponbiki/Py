@@ -93,7 +93,7 @@ def collect_metrics():
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainz, 'IPv4')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainz, 'IPv4')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz, 'IPv4')
-            chain.zero_counters()
+            # chain.zero_counters()
 
     for param6 in PARAMS6:
         thyme = int(time.time())
@@ -149,7 +149,7 @@ def collect_metrics():
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainz, 'IPv6')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainz, 'IPv6')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz, 'IPv6')
-            chain.zero_counters()
+            # chain.zero_counters()
 
 
 def main():
