@@ -48,6 +48,7 @@ class IPTablesCollector(object):
         iptables.<table>.rules.<rule_marker>.<packets|bytes> <timestamp> <cnt> protocol=<IPv6|IPv4>
         '''
 
+        print self.iterations
         for param in PARAMS:
             thyme = int(time.time())
             table = iptc.Table(param)
@@ -125,7 +126,7 @@ class IPTablesCollector(object):
                 if byt_drop_count >= counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()]:
                     byt_drop_count = byt_drop_count - counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()]
                 counter_holder['ipv4_last_byt_drop_count' + chainz + '_' + str(param).lower()] = byt_drop_count + counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()]
-                if self.iterations < 1:
+                if self.iterations > 0:
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'accept', 'packets', thyme, pkt_accept_count, chainz, 'IPv4')
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'accept', 'bytes', thyme, byt_accept_count, chainz, 'IPv4')
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'mark', 'packets', thyme, pkt_mark_count, chainz, 'IPv4')
@@ -185,7 +186,7 @@ class IPTablesCollector(object):
                                 else:
                                     cmnt_byt = bytes
                                 counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = bytes + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-                                if self.iterations < 1:
+                                if self.iterations > 0:
                                     print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv6')
                                     print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv6')
                             else:
@@ -210,7 +211,7 @@ class IPTablesCollector(object):
                 if byt_drop_count >= counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param).lower()]:
                     byt_drop_count = byt_drop_count - counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param).lower()]
                 counter_holder['ipv6_last_byt_drop_count' + chainz + '_' + str(param).lower()] = byt_drop_count + counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param).lower()]
-                if self.iterations < 1:
+                if self.iterations > 0:
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'accept', 'packets', thyme, pkt_accept_count, chainz, 'IPv6')
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'accept', 'bytes', thyme, byt_accept_count, chainz, 'IPv6')
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'mark', 'packets', thyme, pkt_mark_count, chainz, 'IPv6')
