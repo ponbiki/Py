@@ -84,8 +84,18 @@ def collect_metrics():
                     if match.name == 'comment':
                         if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
                             cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, packets, 'IPv4')
-                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, bytes, 'IPv4')
+                            if packets >= counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                cmnt_pkt = packets - counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            else:
+                                cmnt_pkt = packets
+                            counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = cmnt_pkt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            if bytes >= counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                cmnt_byt = bytes - counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            else:
+                                cmnt_byt = bytes
+                            counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = cmnt_byt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv4')
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv4')
                         else:
                             pass
                     else:
@@ -157,8 +167,18 @@ def collect_metrics():
                     if match.name == 'comment':
                         if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
                             cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, packets, 'IPv6')
-                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, bytes, 'IPv6')
+                            if packets >= counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                cmnt_pkt = packets - counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            else:
+                                cmnt_pkt = packets
+                            counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = packets + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            if bytes >= counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                cmnt_byt = bytes - counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            else:
+                                cmnt_byt = bytes
+                            counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = bytes + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv6')
+                            print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv6')
                         else:
                             pass
                     else:
