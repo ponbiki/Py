@@ -19,10 +19,13 @@ import time
 import iptc
 import re
 import sys
+from collections import defaultdict
 
 INTERVAL = 30
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
 PARAMS6 = [iptc.Table6.FILTER, iptc.Table6.MANGLE, iptc.Table6.RAW, iptc.Table6.SECURITY]
+
+counter_holder = defaultdict(lambda: 0)
 
 
 def collect_metrics():
@@ -63,18 +66,38 @@ def collect_metrics():
                     rule_tgt_name = str(rule.target.name).lower()
                 (packets, bytes) = rule.get_counters()
                 if rule_tgt_name == 'accept':
-                    pkt_accept_count += packets
-                    byt_accept_count += bytes
-                else:
-                    pass
-                if rule_tgt_name == 'mark':
-                    pkt_mark_count += packets
-                    byt_mark_count += bytes
-                else:
-                    pass
-                if rule_tgt_name == 'drop':
-                    pkt_drop_count += packets
-                    byt_drop_count += bytes
+                    if packets - counter_holder[str(param).lower() + '_accept_packets_v4_' + chainz] < 0:
+                        pkt_accept_count += packets
+                    else:
+                        pkt_accept_count += packets - counter_holder[str(param).lower() + '_accept_packets_v4_' + chainz]
+                    counter_holder[str(param).lower() + '_accept_packets_v4_' + chainz] = packets
+                    if bytes - counter_holder[str(param).lower() + '_accept_bytes_v4_' + chainz] < 0:
+                        byt_accept_count += bytes
+                    else:
+                        byt_accept_count += bytes - counter_holder[str(param).lower() + '_accept_bytes_v4_' + chainz]
+                    counter_holder[str(param).lower() + '_accept_bytes_v4_' + chainz] = bytes
+                elif rule_tgt_name == 'mark':
+                    if packets - counter_holder[str(param).lower() + '_mark_packets_v4_' + chainz] < 0:
+                        pkt_mark_count += packets
+                    else:
+                        pkt_mark_count += packets - counter_holder[str(param).lower() + '_mark_packets_v4_' + chainz]
+                    counter_holder[str(param).lower() + '_mark_packets_v4_' + chainz] = packets
+                    if bytes - counter_holder[str(param).lower() + '_mark_bytes_v4_' + chainz] < 0:
+                        byt_mark_count += bytes
+                    else:
+                        byt_mark_count += bytes - counter_holder[str(param).lower() + '_mark_bytes_v4_' + chainz]
+                    counter_holder[str(param).lower() + '_mark_bytes_v4_' + chainz] = bytes
+                elif rule_tgt_name == 'drop':
+                    if packets - counter_holder[str(param).lower() + '_drop_packets_v4_' + chainz] < 0:
+                        pkt_drop_count += packets
+                    else:
+                        pkt_drop_count += packets - counter_holder[str(param).lower() + '_drop_packets_v4_' + chainz]
+                    counter_holder[str(param).lower() + '_drop_packets_v4_' + chainz] = packets
+                    if bytes - counter_holder[str(param).lower() + '_drop_bytes_v4_' + chainz] < 0:
+                        byt_drop_count += bytes
+                    else:
+                        byt_drop_count += bytes - counter_holder[str(param).lower() + '_drop_bytes_' + chainz]
+                    counter_holder[str(param).lower() + '_drop_bytes_v4_' + chainz] = bytes
                 else:
                     pass
                 for match in rule.matches:
@@ -93,7 +116,6 @@ def collect_metrics():
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainz, 'IPv4')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainz, 'IPv4')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz, 'IPv4')
-            # chain.zero_counters()
 
     for param6 in PARAMS6:
         thyme = int(time.time())
@@ -119,18 +141,38 @@ def collect_metrics():
                     rule_tgt_name = str(rule.target.name).lower()
                 (packets, bytes) = rule.get_counters()
                 if rule_tgt_name == 'accept':
-                    pkt_accept_count += packets
-                    byt_accept_count += bytes
-                else:
-                    pass
-                if rule_tgt_name == 'mark':
-                    pkt_mark_count += packets
-                    byt_mark_count += bytes
-                else:
-                    pass
-                if rule_tgt_name == 'drop':
-                    pkt_drop_count += packets
-                    byt_drop_count += bytes
+                    if packets - counter_holder[str(param6).lower() + '_accept_packets_v6_' + chainz] < 0:
+                        pkt_accept_count += packets
+                    else:
+                        pkt_accept_count += packets - counter_holder[str(param6).lower() + '_accept_packets_v6_' + chainz]
+                    counter_holder[str(param6).lower() + '_accept_packets_v6_' + chainz] = packets
+                    if bytes - counter_holder[str(param6).lower() + '_accept_bytes_v6_' + chainz] < 0:
+                        byt_accept_count += bytes
+                    else:
+                        byt_accept_count += bytes - counter_holder[str(param6).lower() + '_accept_bytes_v6_' + chainz]
+                    counter_holder[str(param6).lower() + '_accept_bytes_v6_' + chainz] = bytes
+                elif rule_tgt_name == 'mark':
+                    if packets - counter_holder[str(param6).lower() + '_mark_packets_v6_' + chainz] < 0:
+                        pkt_mark_count += packets
+                    else:
+                        pkt_mark_count += packets - counter_holder[str(param6).lower() + '_mark_packets_v6_' + chainz]
+                    counter_holder[str(param6).lower() + '_mark_packets_v6_' + chainz] = packets
+                    if bytes - counter_holder[str(param6).lower() + '_mark_bytes_v6_' + chainz] < 0:
+                        byt_mark_count += bytes
+                    else:
+                        byt_mark_count += bytes - counter_holder[str(param6).lower() + '_mark_bytes_v6_' + chainz]
+                    counter_holder[str(param6).lower() + '_mark_bytes_v6_' + chainz] = bytes
+                elif rule_tgt_name == 'drop':
+                    if packets - counter_holder[str(param6).lower() + '_drop_packets_v6_' + chainz] < 0:
+                        pkt_drop_count += packets
+                    else:
+                        pkt_drop_count += packets - counter_holder[str(param6).lower() + '_drop_packets_v6_' + chainz]
+                    counter_holder[str(param6).lower() + '_drop_packets_v6_' + chainz] = packets
+                    if bytes - counter_holder[str(param6).lower() + '_drop_bytes_v6_' + chainz] < 0:
+                        byt_drop_count += bytes
+                    else:
+                        byt_drop_count += bytes - counter_holder[str(param6).lower() + '_drop_bytes_v6_' + chainz]
+                    counter_holder[str(param6).lower() + '_drop_bytes_v6_' + chainz] = bytes
                 else:
                     pass
                 for match in rule.matches:
@@ -149,7 +191,6 @@ def collect_metrics():
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainz, 'IPv6')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainz, 'IPv6')
             print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' % (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz, 'IPv6')
-            # chain.zero_counters()
 
 
 def main():
