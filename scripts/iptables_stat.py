@@ -45,7 +45,7 @@ class IPTablesCollector(object):
         any rule containing a comment beginning with "tcollector:" and returns the
         data for each matched rule in the format of:
 
-        iptables.<table>.rules.<rule_marker> <packets|bytes> <timestamp> <cnt> protocol=<IPv6|IPv4>
+        iptables.<table>.rules.<rule_marker>.<packets|bytes> <timestamp> <cnt> protocol=<IPv6|IPv4>
         '''
 
         for param in PARAMS:
