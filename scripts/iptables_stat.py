@@ -45,10 +45,9 @@ class IPTablesCollector(object):
         any rule containing a comment beginning with "tcollector:" and returns the
         data for each matched rule in the format of:
 
-        iptables.<table>.rules.<rule_marker>.<packets|bytes> <timestamp> <cnt> protocol=<IPv6|IPv4>
+        iptables.<table>.rules.<rule_marker> <packets|bytes> <timestamp> <cnt> protocol=<IPv6|IPv4>
         '''
 
-        print self.iterations
         for param in PARAMS:
             thyme = int(time.time())
             table = iptc.Table(param)
@@ -87,6 +86,33 @@ class IPTablesCollector(object):
                         byt_drop_count += bytes
                     else:
                         pass
+                    for match in rule.matches:
+                        if match.name == 'comment':
+                            if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
+                                cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
+                                if packets >= counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                    cmnt_pkt = packets - counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                    counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_pkt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                else:
+                                    cmnt_pkt = packets
+                                    counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_pkt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                if bytes >= counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                    cmnt_byt = bytes - counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                    counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_byt + counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                else:
+                                    cmnt_byt = bytes
+                                    counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_byt + counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                if self.iterations > 0:
+                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv4')
+                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv4')
+                            else:
+                                pass
+                        else:
+                            pass
                 if pkt_accept_count >= counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]:
                     pkt_accept_count = pkt_accept_count - counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]
                 counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()] = pkt_accept_count + counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]
@@ -151,6 +177,33 @@ class IPTablesCollector(object):
                         byt_drop_count += bytes
                     else:
                         pass
+                    for match in rule.matches:
+                        if match.name == 'comment':
+                            if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
+                                cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
+                                if packets >= counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                    cmnt_pkt = packets - counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                    counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_pkt + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                else:
+                                    cmnt_pkt = packets
+                                    counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_pkt + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                if bytes >= counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
+                                    cmnt_byt = bytes - counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                    counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_byt + counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                else:
+                                    cmnt_byt = bytes
+                                    counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
+                                        = cmnt_byt + counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                                if self.iterations > 0:
+                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv6')
+                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv6')
+                            else:
+                                pass
+                        else:
+                            pass
                 if pkt_accept_count >= counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]:
                     pkt_accept_count = pkt_accept_count - counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]
                 counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param).lower()] = pkt_accept_count + counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]
@@ -192,48 +245,3 @@ def main():
 
 if __name__ == '__main__':
     sys.exit(main())
-
-
-'''for match in rule.matches:
-    if match.name == 'comment':
-        if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
-            cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-            if packets >= counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
-                cmnt_pkt = packets - counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            else:
-                cmnt_pkt = packets
-            counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = cmnt_pkt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            if bytes >= counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
-                cmnt_byt = bytes - counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            else:
-                cmnt_byt = bytes
-            counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = cmnt_byt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            if self.iterations > 1:
-                print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv4')
-                print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv4')
-        else:
-            pass
-    else:
-        pass'''
-
-'''for match in rule.matches:
-    if match.name == 'comment':
-        if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
-            cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-            if packets >= counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
-                cmnt_pkt = packets - counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            else:
-                cmnt_pkt = packets
-            counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = packets + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            if bytes >= counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
-                cmnt_byt = bytes - counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            else:
-                cmnt_byt = bytes
-            counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] = bytes + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-            if self.iterations > 0:
-                print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv6')
-                print 'iptables.%s.rules.%s.%s %d %d protocol=%s' % (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv6')
-        else:
-            pass
-    else:
-        pass'''
