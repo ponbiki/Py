@@ -54,7 +54,6 @@ class IPTablesCollector(object):
         '''
 
         for param in PARAMS:
-            thyme = int(time.time())
             table = iptc.Table(param)
             table.refresh()
 
@@ -68,32 +67,31 @@ class IPTablesCollector(object):
 
                 if re.match(r'^NS1', chain.name):
                     p = chain.name.split('_')
-                    chainz = str(p[0] + '_' + p[1]).lower()
+
+                    if re.match(r'\d{10}', p[-1]):
+                        p.pop()
+                        p.append('timestamp')
+                        chainz = '_'.join(p).lower()
+                    else:
+                        chainz = str(chain.name).lower()
                 else:
                     chainz = str(chain.name).lower()
 
                 for rule in chain.rules:
-                    if re.match(r'^NS1', rule.target.name):
-                        p = rule.target.name.split('_')
-                        rule_tgt_name = str(p[0] + '_' + p[1]).lower()
-                    else:
-                        rule_tgt_name = str(rule.target.name).lower()
-
-                    (packets, bytes) = rule.get_counters()
+                    rule_tgt_name = str(rule.target.name).lower()
 
                     if rule_tgt_name == 'accept':
+                        (packets, bytes) = rule.get_counters()
                         pkt_accept_count += packets
                         byt_accept_count += bytes
-                    else:
-                        pass
 
-                    if rule_tgt_name == 'mark':
+                    elif rule_tgt_name == 'mark':
+                        (packets, bytes) = rule.get_counters()
                         pkt_mark_count += packets
                         byt_mark_count += bytes
-                    else:
-                        pass
 
-                    if rule_tgt_name == 'drop':
+                    elif rule_tgt_name == 'drop':
+                        (packets, bytes) = rule.get_counters()
                         pkt_drop_count += packets
                         byt_drop_count += bytes
                     else:
@@ -185,6 +183,7 @@ class IPTablesCollector(object):
                     byt_drop_count + counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()]
 
                 if self.iterations > 0:
+                    thyme = int(time.time())
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
                           (str(param).lower(), 'accept', 'packets', thyme, pkt_accept_count, chainz, 'IPv4')
 
@@ -204,7 +203,6 @@ class IPTablesCollector(object):
                           (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainz, 'IPv4')
 
         for param6 in PARAMS6:
-            thyme = int(time.time())
             table = iptc.Table6(param6)
             table.refresh()
 
@@ -218,32 +216,31 @@ class IPTablesCollector(object):
 
                 if re.match(r'^NS1', chain.name):
                     p = chain.name.split('_')
-                    chainz = str(p[0] + '_' + p[1]).lower()
+
+                    if re.match(r'\d{10}', p[-1]):
+                        p.pop()
+                        p.append('timestamp')
+                        chainz = '_'.join(p).lower()
+                    else:
+                        chainz = str(chain.name).lower()
                 else:
                     chainz = str(chain.name).lower()
 
                 for rule in chain.rules:
-                    if re.match(r'^NS1', rule.target.name):
-                        p = rule.target.name.split('_')
-                        rule_tgt_name = str(p[0] + '_' + p[1]).lower()
-                    else:
-                        rule_tgt_name = str(rule.target.name).lower()
-
-                    (packets, bytes) = rule.get_counters()
+                    rule_tgt_name = str(rule.target.name).lower()
 
                     if rule_tgt_name == 'accept':
+                        (packets, bytes) = rule.get_counters()
                         pkt_accept_count += packets
                         byt_accept_count += bytes
-                    else:
-                        pass
 
-                    if rule_tgt_name == 'mark':
+                    elif rule_tgt_name == 'mark':
+                        (packets, bytes) = rule.get_counters()
                         pkt_mark_count += packets
                         byt_mark_count += bytes
-                    else:
-                        pass
 
-                    if rule_tgt_name == 'drop':
+                    elif rule_tgt_name == 'drop':
+                        (packets, bytes) = rule.get_counters()
                         pkt_drop_count += packets
                         byt_drop_count += bytes
                     else:
@@ -331,6 +328,7 @@ class IPTablesCollector(object):
                     byt_drop_count + counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param6).lower()]
 
                 if self.iterations > 0:
+                    thyme = int(time.time())
                     print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
                           (str(param6).lower(), 'accept', 'packets', thyme, pkt_accept_count, chainz, 'IPv6')
 
