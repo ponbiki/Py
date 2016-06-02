@@ -19,7 +19,6 @@ import time
 import iptc
 import re
 import sys
-from collections import defaultdict
 
 INTERVAL = 30
 PARAMS = [iptc.Table.FILTER, iptc.Table.NAT, iptc.Table.MANGLE, iptc.Table.RAW]
@@ -31,7 +30,9 @@ except ImportError:
     pass
 
 # We no longer clear counters, so this holds the last value seen
-counter_holder = defaultdict(lambda: 0)
+counter_holder = {}
+ipv4_cmnt_counter_holder = {}
+ipv6_cmnt_counter_holder = {}
 
 
 class IPTablesCollector(object):
@@ -59,281 +60,219 @@ class IPTablesCollector(object):
         #  Cleans counter dict once a week to prevent a growing memory leak
         if self.iterations >= 302400:
             counter_holder.clear()
+            ipv4_cmnt_counter_holder.clear()
+            ipv6_cmnt_counter_holder.clear()
             self.iterations = 0
 
         for param in PARAMS:
             table = iptc.Table(param)
             table.refresh()
-
+            ipv4_cmnt = {}
+            ipv4_cmnt_diff = {}
+            ipv4_metric = {}
+            ipv4_metric_diff = {}
+            ipv4_metric_print = {}
             for chain in table.chains:
                 chainz = str(chain.name).lower()
-
-                pkt_accept_count = 0
-                byt_accept_count = 0
-                pkt_mark_count = 0
-                byt_mark_count = 0
-                pkt_drop_count = 0
-                byt_drop_count = 0
-
                 for rule in chain.rules:
+                    (packets, bytes) = rule.get_counters()
                     rule_tgt_name = str(rule.target.name).lower()
+                    if re.match(r'^ns1', rule_tgt_name):
+                        s = rule_tgt_name.split('_')
+                        if re.match(r'\d{10}', s[-1]):
+                            s.pop()
+                            s.append('timestamp')
+                            rule_tgt_name = '_'.join(s).lower()
 
-                    if rule_tgt_name == 'accept':
-                        (packets, bytes) = rule.get_counters()
-                        pkt_accept_count += packets
-                        byt_accept_count += bytes
-
-                    elif rule_tgt_name == 'mark':
-                        (packets, bytes) = rule.get_counters()
-                        pkt_mark_count += packets
-                        byt_mark_count += bytes
-
-                    elif rule_tgt_name == 'drop':
-                        (packets, bytes) = rule.get_counters()
-                        pkt_drop_count += packets
-                        byt_drop_count += bytes
+                    metric_key = 'iptables.%s.%s-%s' % (param.lower(), rule_tgt_name, chainz)
+                    if metric_key in ipv4_metric.keys():
+                        ipv4_metric[metric_key]['packets'] += packets
+                        ipv4_metric[metric_key]['bytes'] += bytes
                     else:
-                        pass
+                        ipv4_metric[metric_key] = {"packets": packets, "bytes": bytes}
 
                     for match in rule.matches:
                         if match.name == 'comment':
-                            (packets, bytes) = rule.get_counters()
-
-                            if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
-                                cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-
-                                if packets >= counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
-                                    cmnt_pkt = packets - counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-
-                                    counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
-                                        = cmnt_pkt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                            if re.match(r'^tcollector:.*', match.parameters['comment'], re.IGNORECASE):
+                                cmnt = match.parameters['comment'].split(':')[1].strip().split()[0]
+                                cmnt_key = 'iptables.%s.rules.%s' % (param.lower(), cmnt)
+                                if cmnt_key in ipv4_cmnt.keys():
+                                    ipv4_cmnt[cmnt_key]['packets'] += packets
+                                    ipv4_cmnt[cmnt_key]['bytes'] += bytes
                                 else:
-                                    cmnt_pkt = packets
+                                    ipv4_cmnt[cmnt_key] = {"packets": packets, "bytes": bytes}
 
-                                    counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
-                                        = cmnt_pkt + counter_holder['ipv4_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
+                for key in ipv4_metric.keys():
+                    if key in counter_holder.keys():
+                        if ipv4_metric[key]['packets'] >= counter_holder[key]['packets']:
+                            ipv4_metric_diff[key] = {'packets': ipv4_metric[key]['packets'] -
+                                                     counter_holder[key]['packets'],
+                                                     'bytes': ipv4_metric[key]['bytes'] -
+                                                     counter_holder[key]['bytes']}
+                            counter_holder[key]['packets'] = ipv4_metric[key]['packets']
+                            counter_holder[key]['bytes'] = ipv4_metric[key]['bytes']
+                        else:
+                            counter_holder[key] = {'packets': ipv4_metric[key]['packets'],
+                                                   'bytes': ipv4_metric[key]['bytes']}
+                    else:
+                        counter_holder[key] = {'packets': ipv4_metric[key]['packets'],
+                                               'bytes': ipv4_metric[key]['bytes']}
 
-                                if bytes >= counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]:
-                                    cmnt_byt = bytes - counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-
-                                    counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
-                                        = cmnt_byt + counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-                                else:
-                                    cmnt_byt = bytes
-
-                                    counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()] \
-                                        = cmnt_byt + counter_holder['ipv4_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param).lower()]
-
-                                if self.iterations > 0:
-                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' %\
-                                          (str(param).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv4')
-
-                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' %\
-                                          (str(param).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv4')
-
-                if pkt_accept_count >= counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]:
-                    pkt_accept_count = pkt_accept_count - counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]
-
-                counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()] =\
-                    pkt_accept_count + counter_holder['ipv4_last_pkt_accept_count_' + chainz + '_' + str(param).lower()]
-
-                if pkt_mark_count >= counter_holder['ipv4_last_pkt_mark_count_' + chainz + '_' + str(param).lower()]:
-                    pkt_mark_count = pkt_mark_count - counter_holder['ipv4_last_pkt_mark_count_' + chainz + '_' + str(param).lower()]
-
-                counter_holder['ipv4_last_pkt_mark_count_' + chainz + '_' + str(param).lower()] =\
-                    pkt_mark_count + counter_holder['ipv4_last_pkt_mark_count_' + chainz + '_' + str(param).lower()]
-
-                if pkt_drop_count >= counter_holder['ipv4_last_pkt_drop_count_' + chainz + '_' + str(param).lower()]:
-                    pkt_drop_count = pkt_drop_count - counter_holder['ipv4_last_pkt_drop_count_' + chainz + '_' + str(param).lower()]
-
-                counter_holder['ipv4_last_pkt_drop_count_' + chainz + '_' + str(param).lower()] =\
-                    pkt_drop_count + counter_holder['ipv4_last_pkt_drop_count_' + chainz + '_' + str(param).lower()]
-
-                if byt_accept_count >= counter_holder['ipv4_last_byt_accept_count_' + chainz + '_' + str(param).lower()]:
-                    byt_accept_count = byt_accept_count - counter_holder['ipv4_last_byt_accept_count_' + chainz + '_' + str(param).lower()]
-
-                counter_holder['ipv4_last_byt_accept_count_' + chainz + '_' + str(param).lower()] =\
-                    byt_accept_count + counter_holder['ipv4_last_byt_accept_count_' + chainz + '_' + str(param).lower()]
-
-                if byt_mark_count >= counter_holder['ipv4_last_byt_mark_count_' + chainz + '_' + str(param).lower()]:
-                    byt_mark_count = byt_mark_count - counter_holder['ipv4_last_byt_mark_count_' + chainz + '_' + str(param).lower()]
-
-                counter_holder['ipv4_last_byt_mark_count_' + chainz + '_' + str(param).lower()] =\
-                    byt_mark_count + counter_holder['ipv4_last_byt_mark_count_' + chainz + '_' + str(param).lower()]
-
-                if byt_drop_count >= counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()]:
-                    byt_drop_count = byt_drop_count - counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()]
-
-                counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()] =\
-                    byt_drop_count + counter_holder['ipv4_last_byt_drop_count_' + chainz + '_' + str(param).lower()]
-
-                if self.iterations > 0:
-                    if re.match(r'^ns1', chainz):
-                        p = chainz.split('_')
-
+                for key in ipv4_metric_diff.keys():
+                    pcs = key.split('-')
+                    if re.match(r'^ns1', pcs[1]):
+                        p = pcs[-1].split('_')
                         if re.match(r'\d{10}', p[-1]):
                             p.pop()
                             p.append('timestamp')
-                            chainy = '_'.join(p).lower()
+                            new_end = '_'.join(p).lower()
+                            pcs.pop()
+                            pcs.append(new_end)
+                            new_key = '-'.join(pcs).lower()
                         else:
-                            chainy = chainz
+                            new_key = key
                     else:
-                        chainy = chainz
+                        new_key = key
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param).lower(), 'accept', 'packets', thyme, pkt_accept_count, chainy, 'IPv4')
+                    if new_key in ipv4_metric_print.keys():
+                        ipv4_metric_print[new_key]['packets'] += ipv4_metric_diff[key]['packets']
+                        ipv4_metric_print[new_key]['bytes'] += ipv4_metric_diff[key]['bytes']
+                    else:
+                        ipv4_metric_print[new_key] = {'packets': ipv4_metric_diff[key]['packets'],
+                                                      'bytes': ipv4_metric_diff[key]['bytes']}
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param).lower(), 'accept', 'bytes', thyme, byt_accept_count, chainy, 'IPv4')
+            if self.iterations > 0:
+                for i in ipv4_metric_print:
+                    print '%s.packets %d %d chain=%s protocol=IPv4' % (i.split('-')[0], thyme,
+                                                                       ipv4_metric_print[i]['packets'], i.split('-')[1])
+                    print '%s.bytes %d %d chain=%s protocol=IPv4' % (i.split('-')[0], thyme,
+                                                                     ipv4_metric_print[i]['bytes'], i.split('-')[1])
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param).lower(), 'mark', 'packets', thyme, pkt_mark_count, chainy, 'IPv4')
+            for key in ipv4_cmnt.keys():
+                if key in ipv4_cmnt_counter_holder.keys():
+                    if ipv4_cmnt[key]['packets'] >= ipv4_cmnt_counter_holder[key]['packets']:
+                        ipv4_cmnt_diff[key] = {'packets': ipv4_cmnt[key]['packets'] -
+                                               ipv4_cmnt_counter_holder[key]['packets'],
+                                               'bytes': ipv4_cmnt[key]['bytes'] -
+                                               ipv4_cmnt_counter_holder[key]['bytes']}
+                        ipv4_cmnt_counter_holder[key]['packets'] = ipv4_cmnt[key]['packets']
+                        ipv4_cmnt_counter_holder[key]['bytes'] = ipv4_cmnt[key]['bytes']
+                    else:
+                        ipv4_cmnt_counter_holder[key] = {'packets': ipv4_cmnt[key]['packets'],
+                                                         'bytes': ipv4_cmnt[key]['bytes']}
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainy, 'IPv4')
+                else:
+                    ipv4_cmnt_counter_holder[key] = {'packets': ipv4_cmnt[key]['packets'],
+                                                     'bytes': ipv4_cmnt[key]['bytes']}
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainy, 'IPv4')
+                if self.iterations > 0 and key in ipv4_cmnt_diff.keys():
+                    print '%s.packets %d %d protocol=IPv4' % (key, thyme, ipv4_cmnt_diff[key]['packets'])
+                    print '%s.bytes %d %d protocol=IPv4' % (key, thyme, ipv4_cmnt_diff[key]['bytes'])
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainy, 'IPv4')
-
-        for param6 in PARAMS6:
-            table = iptc.Table6(param6)
+        for param in PARAMS6:
+            table = iptc.Table(param)
             table.refresh()
-
+            ipv6_cmnt = {}
+            ipv6_cmnt_diff = {}
+            ipv6_metric = {}
+            ipv6_metric_diff = {}
+            ipv6_metric_print = {}
             for chain in table.chains:
                 chainz = str(chain.name).lower()
-
-                pkt_accept_count = 0
-                byt_accept_count = 0
-                pkt_mark_count = 0
-                byt_mark_count = 0
-                pkt_drop_count = 0
-                byt_drop_count = 0
-
                 for rule in chain.rules:
+                    (packets, bytes) = rule.get_counters()
                     rule_tgt_name = str(rule.target.name).lower()
+                    if re.match(r'^ns1', rule_tgt_name):
+                        s = rule_tgt_name.split('_')
+                        if re.match(r'\d{10}', s[-1]):
+                            s.pop()
+                            s.append('timestamp')
+                            rule_tgt_name = '_'.join(s).lower()
 
-                    if rule_tgt_name == 'accept':
-                        (packets, bytes) = rule.get_counters()
-                        pkt_accept_count += packets
-                        byt_accept_count += bytes
-
-                    elif rule_tgt_name == 'mark':
-                        (packets, bytes) = rule.get_counters()
-                        pkt_mark_count += packets
-                        byt_mark_count += bytes
-
-                    elif rule_tgt_name == 'drop':
-                        (packets, bytes) = rule.get_counters()
-                        pkt_drop_count += packets
-                        byt_drop_count += bytes
+                    metric_key = 'iptables.%s.%s-%s' % (param.lower(), rule_tgt_name, chainz)
+                    if metric_key in ipv6_metric.keys():
+                        ipv6_metric[metric_key]['packets'] += packets
+                        ipv6_metric[metric_key]['bytes'] += bytes
                     else:
-                        pass
+                        ipv6_metric[metric_key] = {"packets": packets, "bytes": bytes}
 
                     for match in rule.matches:
                         if match.name == 'comment':
-                            (packets, bytes) = rule.get_counters()
-
-                            if re.match(r'^tcollector:.*', match.parameters["comment"], re.IGNORECASE):
-                                cmnt = match.parameters["comment"].split(':')[1].strip().split()[0]
-
-                                if packets >= counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]:
-                                    cmnt_pkt = packets - counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]
-
-                                    counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()] \
-                                        = cmnt_pkt + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]
+                            if re.match(r'^tcollector:.*', match.parameters['comment'], re.IGNORECASE):
+                                cmnt = match.parameters['comment'].split(':')[1].strip().split()[0]
+                                cmnt_key = 'iptables.%s.rules.%s' % (param.lower(), cmnt)
+                                if cmnt_key in ipv6_cmnt.keys():
+                                    ipv6_cmnt[cmnt_key]['packets'] += packets
+                                    ipv6_cmnt[cmnt_key]['bytes'] += bytes
                                 else:
-                                    cmnt_pkt = packets
+                                    ipv6_cmnt[cmnt_key] = {"packets": packets, "bytes": bytes}
 
-                                    counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()] \
-                                        = cmnt_pkt + counter_holder['ipv6_last_pkt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]
+                for key in ipv6_metric.keys():
+                    if key in counter_holder.keys():
+                        if ipv6_metric[key]['packets'] >= counter_holder[key]['packets']:
+                            ipv6_metric_diff[key] = {'packets': ipv6_metric[key]['packets'] -
+                                                     counter_holder[key]['packets'],
+                                                     'bytes': ipv6_metric[key]['bytes'] -
+                                                     counter_holder[key]['bytes']}
+                            counter_holder[key]['packets'] = ipv6_metric[key]['packets']
+                            counter_holder[key]['bytes'] = ipv6_metric[key]['bytes']
+                        else:
+                            counter_holder[key] = {'packets': ipv6_metric[key]['packets'],
+                                                   'bytes': ipv6_metric[key]['bytes']}
+                    else:
+                        counter_holder[key] = {'packets': ipv6_metric[key]['packets'],
+                                               'bytes': ipv6_metric[key]['bytes']}
 
-                                if bytes >= counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]:
-                                    cmnt_byt = bytes - counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]
-
-                                    counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()] \
-                                        = cmnt_byt + counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]
-                                else:
-                                    cmnt_byt = bytes
-
-                                    counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()] \
-                                        = cmnt_byt + counter_holder['ipv6_last_byt_' + cmnt + '_count_' + chainz + '_' + str(param6).lower()]
-
-                                if self.iterations > 0:
-                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' %\
-                                          (str(param6).lower(), cmnt, 'packets', thyme, cmnt_pkt, 'IPv6')
-
-                                    print 'iptables.%s.rules.%s.%s %d %d protocol=%s' %\
-                                          (str(param6).lower(), cmnt, 'bytes', thyme, cmnt_byt, 'IPv6')
-
-                if pkt_accept_count >= counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param6).lower()]:
-                    pkt_accept_count = pkt_accept_count - counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param6).lower()]
-
-                counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param6).lower()] =\
-                    pkt_accept_count + counter_holder['ipv6_last_pkt_accept_count_' + chainz + '_' + str(param6).lower()]
-
-                if pkt_mark_count >= counter_holder['ipv6_last_pkt_mark_count_' + chainz + '_' + str(param6).lower()]:
-                    pkt_mark_count = pkt_mark_count - counter_holder['ipv6_last_pkt_mark_count_' + chainz + '_' + str(param6).lower()]
-
-                counter_holder['ipv6_last_pkt_mark_count_' + chainz + '_' + str(param6).lower()] =\
-                    pkt_mark_count + counter_holder['ipv6_last_pkt_mark_count_' + chainz + '_' + str(param6).lower()]
-
-                if pkt_drop_count >= counter_holder['ipv6_last_pkt_drop_count_' + chainz + '_' + str(param6).lower()]:
-                    pkt_drop_count = pkt_drop_count - counter_holder['ipv6_last_pkt_drop_count_' + chainz + '_' + str(param6).lower()]
-
-                counter_holder['ipv6_last_pkt_drop_count_' + chainz + '_' + str(param6).lower()] =\
-                    pkt_drop_count + counter_holder['ipv6_last_pkt_drop_count_' + chainz + '_' + str(param6).lower()]
-
-                if byt_accept_count >= counter_holder['ipv6_last_byt_accept_count_' + chainz + '_' + str(param6).lower()]:
-                    byt_accept_count = byt_accept_count - counter_holder['ipv6_last_byt_accept_count_' + chainz + '_' + str(param6).lower()]
-
-                counter_holder['ipv6_last_byt_accept_count_' + chainz + '_' + str(param6).lower()] =\
-                    byt_accept_count + counter_holder['ipv6_last_byt_accept_count_' + chainz + '_' + str(param6).lower()]
-
-                if byt_mark_count >= counter_holder['ipv6_last_byt_mark_count_' + chainz + '_' + str(param6).lower()]:
-                    byt_mark_count = byt_mark_count - counter_holder['ipv6_last_byt_mark_count_' + chainz + '_' + str(param6).lower()]
-
-                counter_holder['ipv6_last_byt_mark_count_' + chainz + '_' + str(param6).lower()] =\
-                    byt_mark_count + counter_holder['ipv6_last_byt_mark_count_' + chainz + '_' + str(param6).lower()]
-
-                if byt_drop_count >= counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param6).lower()]:
-                    byt_drop_count = byt_drop_count - counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param6).lower()]
-
-                counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param6).lower()] =\
-                    byt_drop_count + counter_holder['ipv6_last_byt_drop_count_' + chainz + '_' + str(param6).lower()]
-
-                if self.iterations > 0:
-                    if re.match(r'^ns1', chainz):
-                        p = chainz.split('_')
-
+                for key in ipv6_metric_diff.keys():
+                    pcs = key.split('-')
+                    if re.match(r'^ns1', pcs[1]):
+                        p = pcs[-1].split('_')
                         if re.match(r'\d{10}', p[-1]):
                             p.pop()
                             p.append('timestamp')
-                            chainy = '_'.join(p).lower()
+                            new_end = '_'.join(p).lower()
+                            pcs.pop()
+                            pcs.append(new_end)
+                            new_key = '-'.join(pcs).lower()
                         else:
-                            chainy = chainz
+                            new_key = key
                     else:
-                        chainy = chainz
+                        new_key = key
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param6).lower(), 'accept', 'packets', thyme, pkt_accept_count, chainy, 'IPv6')
+                    if new_key in ipv6_metric_print.keys():
+                        ipv6_metric_print[new_key]['packets'] += ipv6_metric_diff[key]['packets']
+                        ipv6_metric_print[new_key]['bytes'] += ipv6_metric_diff[key]['bytes']
+                    else:
+                        ipv6_metric_print[new_key] = {'packets': ipv6_metric_diff[key]['packets'],
+                                                      'bytes': ipv6_metric_diff[key]['bytes']}
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param6).lower(), 'accept', 'bytes', thyme, byt_accept_count, chainy, 'IPv6')
+            if self.iterations > 0:
+                for i in ipv6_metric_print:
+                    print '%s.packets %d %d chain=%s protocol=IPv6' % (i.split('-')[0], thyme,
+                                                                       ipv6_metric_print[i]['packets'], i.split('-')[1])
+                    print '%s.bytes %d %d chain=%s protocol=IPv6' % (i.split('-')[0], thyme,
+                                                                     ipv6_metric_print[i]['bytes'], i.split('-')[1])
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param6).lower(), 'mark', 'packets', thyme, pkt_mark_count, chainy, 'IPv6')
+            for key in ipv6_cmnt.keys():
+                if key in ipv6_cmnt_counter_holder.keys():
+                    if ipv6_cmnt[key]['packets'] >= ipv6_cmnt_counter_holder[key]['packets']:
+                        ipv6_cmnt_diff[key] = {'packets': ipv6_cmnt[key]['packets'] -
+                                               ipv6_cmnt_counter_holder[key]['packets'],
+                                               'bytes': ipv6_cmnt[key]['bytes'] -
+                                               ipv6_cmnt_counter_holder[key]['bytes']}
+                        ipv6_cmnt_counter_holder[key]['packets'] = ipv6_cmnt[key]['packets']
+                        ipv6_cmnt_counter_holder[key]['bytes'] = ipv6_cmnt[key]['bytes']
+                    else:
+                        ipv6_cmnt_counter_holder[key] = {'packets': ipv6_cmnt[key]['packets'],
+                                                         'bytes': ipv6_cmnt[key]['bytes']}
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param6).lower(), 'mark', 'bytes', thyme, byt_mark_count, chainy, 'IPv6')
+                else:
+                    ipv6_cmnt_counter_holder[key] = {'packets': ipv6_cmnt[key]['packets'],
+                                                     'bytes': ipv6_cmnt[key]['bytes']}
 
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param6).lower(), 'drop', 'packets', thyme, pkt_drop_count, chainy, 'IPv6')
-
-                    print 'iptables.%s.%s.%s %d %d chain=%s protocol=%s' %\
-                          (str(param6).lower(), 'drop', 'bytes', thyme, byt_drop_count, chainy, 'IPv6')
+                if self.iterations > 0 and key in ipv6_cmnt_diff.keys():
+                    print '%s.packets %d %d protocol=IPv6' % (key, thyme, ipv6_cmnt_diff[key]['packets'])
+                    print '%s.bytes %d %d protocol=IPv6' % (key, thyme, ipv6_cmnt_diff[key]['bytes'])
 
         self.iterations += 1
 
