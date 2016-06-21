@@ -31,6 +31,7 @@ except ImportError:
 
 # We no longer clear counters, so this holds the last value seen
 counter_holder = {}
+ipv6_counter_holder = {}
 ipv4_cmnt_counter_holder = {}
 ipv6_cmnt_counter_holder = {}
 
@@ -60,6 +61,7 @@ class IPTablesCollector(object):
         #  Cleans counter dict once a week to prevent a growing memory leak
         if self.iterations >= 302400:
             counter_holder.clear()
+            ipv6_counter_holder.clear()
             ipv4_cmnt_counter_holder.clear()
             ipv6_cmnt_counter_holder.clear()
             self.iterations = 0
@@ -89,7 +91,7 @@ class IPTablesCollector(object):
                         ipv4_metric[metric_key]['packets'] += packets
                         ipv4_metric[metric_key]['bytes'] += bytes
                     else:
-                        ipv4_metric[metric_key] = {"packets": packets, "bytes": bytes}
+                        ipv4_metric[metric_key] = {'packets': packets, 'bytes': bytes}
 
                     for match in rule.matches:
                         if match.name == 'comment':
@@ -100,7 +102,7 @@ class IPTablesCollector(object):
                                     ipv4_cmnt[cmnt_key]['packets'] += packets
                                     ipv4_cmnt[cmnt_key]['bytes'] += bytes
                                 else:
-                                    ipv4_cmnt[cmnt_key] = {"packets": packets, "bytes": bytes}
+                                    ipv4_cmnt[cmnt_key] = {'packets': packets, 'bytes': bytes}
 
                 for key in ipv4_metric.keys():
                     if key in counter_holder.keys():
@@ -169,8 +171,8 @@ class IPTablesCollector(object):
                     print '%s.packets %d %d protocol=IPv4' % (key, thyme, ipv4_cmnt_diff[key]['packets'])
                     print '%s.bytes %d %d protocol=IPv4' % (key, thyme, ipv4_cmnt_diff[key]['bytes'])
 
-        for param in PARAMS6:
-            table = iptc.Table(param)
+        for param6 in PARAMS6:
+            table = iptc.Table6(param6)
             table.refresh()
             ipv6_cmnt = {}
             ipv6_cmnt_diff = {}
@@ -189,7 +191,7 @@ class IPTablesCollector(object):
                             s.append('timestamp')
                             rule_tgt_name = '_'.join(s).lower()
 
-                    metric_key = 'iptables.%s.%s-%s' % (param.lower(), rule_tgt_name, chainz)
+                    metric_key = 'iptables.%s.%s-%s' % (param6.lower(), rule_tgt_name, chainz)
                     if metric_key in ipv6_metric.keys():
                         ipv6_metric[metric_key]['packets'] += packets
                         ipv6_metric[metric_key]['bytes'] += bytes
@@ -200,28 +202,28 @@ class IPTablesCollector(object):
                         if match.name == 'comment':
                             if re.match(r'^tcollector:.*', match.parameters['comment'], re.IGNORECASE):
                                 cmnt = match.parameters['comment'].split(':')[1].strip().split()[0]
-                                cmnt_key = 'iptables.%s.rules.%s' % (param.lower(), cmnt)
+                                cmnt_key = 'iptables.%s.rules.%s' % (param6.lower(), cmnt)
                                 if cmnt_key in ipv6_cmnt.keys():
                                     ipv6_cmnt[cmnt_key]['packets'] += packets
                                     ipv6_cmnt[cmnt_key]['bytes'] += bytes
                                 else:
-                                    ipv6_cmnt[cmnt_key] = {"packets": packets, "bytes": bytes}
+                                    ipv6_cmnt[cmnt_key] = {'packets': packets, 'bytes': bytes}
 
                 for key in ipv6_metric.keys():
-                    if key in counter_holder.keys():
-                        if ipv6_metric[key]['packets'] >= counter_holder[key]['packets']:
+                    if key in ipv6_counter_holder.keys():
+                        if ipv6_metric[key]['packets'] >= ipv6_counter_holder[key]['packets']:
                             ipv6_metric_diff[key] = {'packets': ipv6_metric[key]['packets'] -
-                                                     counter_holder[key]['packets'],
+                                                     ipv6_counter_holder[key]['packets'],
                                                      'bytes': ipv6_metric[key]['bytes'] -
-                                                     counter_holder[key]['bytes']}
-                            counter_holder[key]['packets'] = ipv6_metric[key]['packets']
-                            counter_holder[key]['bytes'] = ipv6_metric[key]['bytes']
+                                                     ipv6_counter_holder[key]['bytes']}
+                            ipv6_counter_holder[key]['packets'] = ipv6_metric[key]['packets']
+                            ipv6_counter_holder[key]['bytes'] = ipv6_metric[key]['bytes']
                         else:
-                            counter_holder[key] = {'packets': ipv6_metric[key]['packets'],
-                                                   'bytes': ipv6_metric[key]['bytes']}
+                            ipv6_counter_holder[key] = {'packets': ipv6_metric[key]['packets'],
+                                                        'bytes': ipv6_metric[key]['bytes']}
                     else:
-                        counter_holder[key] = {'packets': ipv6_metric[key]['packets'],
-                                               'bytes': ipv6_metric[key]['bytes']}
+                        ipv6_counter_holder[key] = {'packets': ipv6_metric[key]['packets'],
+                                                    'bytes': ipv6_metric[key]['bytes']}
 
                 for key in ipv6_metric_diff.keys():
                     pcs = key.split('-')
