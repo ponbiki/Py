@@ -20,7 +20,7 @@ db = client['xxx']
 collection = db.data_feeds
 
 for key, value in holder:
-    doc = collection.find_one({"_id":ObjectId(key)})
+    doc = collection.find_one({"_id": ObjectId(key)})
     new_dest = []
     for dest in doc['destinations']:
         if dest['record'] not in value:
