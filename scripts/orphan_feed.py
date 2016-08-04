@@ -9,7 +9,7 @@ record_id = "read in from file"
 client = MongoClient('mongodb://xxx:xxx@localhost:27017/xxx')
 collection = db.data_feeds
 doc = collection.find_one({"_id":ObjectId(feed_id)})
-new_dest
+new_dest = []
 for dest in doc['destinations']:
     if dest['record'] != ObjectId(record_id):
         new_dest.append(dest)
