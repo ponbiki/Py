@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+from pprint import pprint
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 
@@ -15,18 +16,34 @@ with open("/home/ponbiki/Documents/client_2016.txt") as fl:
             else:
                 holder[y[0]] = [y[1]]
 
-client = MongoClient('mongodb://xxx:xxx@localhost:27017')
-db = client['xxx']
-collection = db.data_feeds
+client = MongoClient('mongodb://***:***@localhost:27017')
+db = client['***']
+collection = db.d_feeds
 
-for key, value in holder:
-    doc = collection.find_one({"_id": ObjectId(key)})
+for key in holder:
+    try:
+        doc = collection.find_one({"_id": ObjectId(key)})
+    except:
+        pass
     new_dest = []
+    removed = []
+    original = 0
+    deleted = 0
     for dest in doc['destinations']:
-        if dest['record'] not in value:
+        original += 1
+        if str(dest['record']) not in holder[key]:
             new_dest.append(dest)
+        else:
+            deleted += 1
+            removed.append(dest)
     del doc['destinations']
     doc['destinations'] = new_dest
-    db.save(doc)
+    collection.save(doc)
+    print "\n\n================================================================="
+    print "There were %d destinations in %s to start" % (original, key)
+    print "The following %d destinations were removed from %s, leaving %d destinations\n" % (deleted, key, original-deleted)
+    for rem in removed:
+        pprint(rem)
+
 
 # cat <file> |cut -d" " -f 4-5| awk '{ print $1 " "$2 }' | cut -c6-29,31-31,36-
