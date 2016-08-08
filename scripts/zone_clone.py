@@ -8,6 +8,8 @@ from StringIO import StringIO
 
 '''
 simple zone/record backups called with api key following, and outputs json
+usage:
+python zone_clone.py <key> original_zone backup_zone
 '''
 
 AUTH = 'X-NSONE-Key: ' + sys.argv[1]
@@ -31,6 +33,11 @@ def curl_api(url, verb, authhead, *args):
     c.close()
     return buffer.getvalue()
 
+new_zone_msg = json.loads(curl_api(URL + sys.argv[3], "PUT", AUTH, json.dumps({"zone": sys.argv[3]})))
+if new_zone_msg == {"message":"zone already exists"}:
+    exit
+    print "Zone %s already exists; exiting..." % sys.argv[3]
+    exit()
 
 zone_arg = URL + "/" + OLD_ZONE
 jsons = json.loads(curl_api(zone_arg, 'GET', AUTH))
