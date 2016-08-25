@@ -16,7 +16,7 @@ AUTH = 'X-NSONE-Key: ' + sys.argv[1]
 URL = 'https://api.nsone.net/v1/zones'
 OLD_ZONE = sys.argv[2]
 NEW_ZONE = sys.argv[3]
-if len(sys.argv) >= 4:
+if len(sys.argv) > 4:
     AUTH2 = "X-NSONE-Key: " + sys.argv[4]
 
 
@@ -33,7 +33,7 @@ def curl_api(url, verb, authhead, *args):
     c.close()
     return buffer.getvalue()
 
-if len(sys.argv) >= 4:
+if len(sys.argv) > 4:
     new_zone_msg = json.loads(curl_api(URL + sys.argv[3], "PUT", AUTH2, json.dumps({"zone": sys.argv[3]})))
 else:
     new_zone_msg = json.loads(curl_api(URL + sys.argv[3], "PUT", AUTH, json.dumps({"zone": sys.argv[3]})))
