@@ -1,6 +1,7 @@
 import ipaddress
 
-def rev_match(zone):
+
+def priv_rev(zone):
     ipv4 = '.in-addr.arpa'
     ipv6 = '.ip6.arpa'
     if zone.rstrip('.').lower().endswith(ipv4):
