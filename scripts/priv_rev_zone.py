@@ -28,3 +28,5 @@ def priv_rev(zone):
             return ipaddress.ip_address(ipv6_final).is_private
         except ValueError:
             return False
+    else:
+        return False
